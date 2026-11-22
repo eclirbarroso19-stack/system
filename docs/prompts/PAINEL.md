@@ -41,7 +41,7 @@
 | | # | Etapa | Dias | Arquivo |
 |---|---|---|---|---|
 | ✅ | 1.1 | Esqueleto do app | 2 | `v1/1.1-esqueleto.md` |
-| ⬜ | 1.2 | Memória do app + Backup | 2 | `v1/1.2-memoria.md` |
+| 🔄 | 1.2 | Memória do app + Backup | 2 | `v1/1.2-memoria.md` |
 | ⬜ | 1.3 | Despertar Rápido + Status | 3 | `v1/1.3-despertar-status.md` |
 | ⬜ | 1.4 | Missões diárias | 3 | `v1/1.4-missoes.md` |
 | ⬜ | 1.5 | Registro do Ouro | 2 | `v1/1.5-registro-ouro.md` |

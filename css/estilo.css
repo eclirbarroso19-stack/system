@@ -71,3 +71,8 @@ main#tela { padding: calc(var(--alt-topo) + 16px) 16px calc(var(--alt-menu) + 24
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Modo de teste (?teste=1) */
+.faixa-teste { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 20px; line-height: 20px; text-align: center; background: #FFD400; color: #0A0A12; font-family: var(--fonte-titulo); font-size: 0.7rem; letter-spacing: 2px; }
+body.modo-teste .topo { top: 20px; }
+body.modo-teste main#tela { padding-top: calc(var(--alt-topo) + 36px); }

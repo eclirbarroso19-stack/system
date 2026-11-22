@@ -19,7 +19,7 @@ window.PAINEL = {
       id: "1", nome: "v1", subtitulo: "Primeiro SYSTEM no celular",
       etapas: [
         { id: "1.1", nome: "Esqueleto do app", dias: 2, status: "feito", arquivo: "v1/1.1-esqueleto.md" },
-        { id: "1.2", nome: "Memória do app + Backup", dias: 2, status: "aberto", arquivo: "v1/1.2-memoria.md" },
+        { id: "1.2", nome: "Memória do app + Backup", dias: 2, status: "andamento", arquivo: "v1/1.2-memoria.md" },
         { id: "1.3", nome: "Despertar Rápido + Status", dias: 3, status: "aberto", arquivo: "v1/1.3-despertar-status.md" },
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "aberto", arquivo: "v1/1.4-missoes.md" },
         { id: "1.5", nome: "Registro do Ouro", dias: 2, status: "aberto", arquivo: "v1/1.5-registro-ouro.md" },

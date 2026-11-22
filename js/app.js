@@ -1,6 +1,8 @@
 // Inicia o app: rotas por hash, menu e service worker.
 import { montarNovaVersao } from "./atualizacao.js";
 
+import { emModoTeste } from "./nucleo/db.js";
+
 const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes"];
 const PADRAO = "missoes";
 const tela = document.getElementById("tela");
@@ -25,6 +27,14 @@ async function mostrar() {
     console.error(erro);
     tela.textContent = "[ERRO AO CARREGAR A TELA]";
   }
+}
+
+if (emModoTeste()) {
+  document.body.classList.add("modo-teste");
+  const faixa = document.createElement("div");
+  faixa.className = "faixa-teste";
+  faixa.textContent = "MODO DE TESTE";
+  document.body.prepend(faixa);
 }
 
 window.addEventListener("hashchange", mostrar);
