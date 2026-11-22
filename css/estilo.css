@@ -97,3 +97,14 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .opcao { width: 100%; text-align: left; min-height: 56px; padding: 8px 14px; font-family: var(--fonte-texto); font-weight: 700; font-size: 1.05rem; letter-spacing: 0; text-transform: none; border-color: #2a2a44; }
 .revelacao, .final { margin-top: 12px; }
 .radar { max-width: 360px; margin: 8px auto 16px; }
+
+/* Status */
+.ficha-topo { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.rank-gigante { font-family: var(--fonte-titulo); font-size: 4.5rem; line-height: 1; color: var(--azul); text-shadow: 0 0 18px var(--azul), 0 0 40px var(--roxo); min-width: 72px; text-align: center; }
+.ficha-nome { font-family: var(--fonte-titulo); font-size: 1.2rem; }
+.ficha-classe { color: var(--texto2); }
+.ficha-titulo { font-style: italic; color: var(--azul); }
+.linha-barra { margin-bottom: 10px; }
+.subtitulo.azul { color: var(--azul); margin: 16px 0 8px; }
+.tag { margin-left: 8px; padding: 1px 6px; border: 1px solid var(--roxo); border-radius: 4px; font-size: 0.7rem; color: var(--roxo); letter-spacing: 1px; }
+.apagado { color: var(--texto2) !important; font-weight: 500 !important; }
