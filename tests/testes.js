@@ -1,3 +1,4 @@
+import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
 import { diaDoJogo, horasAteVirada } from "../js/nucleo/dia.js";
 import { formatarReais, lerReais, formatarData, nomeDiaSemana } from "../js/nucleo/formato.js";
 import { dataMaisRecente, validarBackup, montarBackup, nomeArquivoBackup, deveLembrarBackup } from "../js/nucleo/backup.js";
@@ -118,5 +119,57 @@ testes.push(
     igual(dataMaisRecente(undefined, "2026-11-20"), "2026-11-20");
     igual(dataMaisRecente("2026-11-20", undefined), "2026-11-20");
     igual(dataMaisRecente(undefined, undefined), undefined);
+  } },
+);
+
+testes.push(
+  { nome: "xpParaProximo e nivelDe", rodar() {
+    igual(xpParaProximo(1), 80);
+    igual(xpParaProximo(10), 350);
+    igual(nivelDe(0).nivel, 1);
+    igual(nivelDe(79).nivel, 1);
+    igual(nivelDe(80).nivel, 2);
+    igual(nivelDe(190).nivel, 3);
+    igual(nivelDe(190).xpNoNivel, 0);
+    igual(nivelDe(100).xpNoNivel, 20);
+    igual(nivelDe(100).xpParaProximo, 110);
+  } },
+  { nome: "rankDaNota: limites de cada rank", rodar() {
+    const esperado = [[0, "E"], [19, "E"], [20, "D"], [39, "D"], [40, "C"], [59, "C"], [60, "B"], [74, "B"], [75, "A"], [89, "A"], [90, "S"], [100, "S"]];
+    for (const [n, r] of esperado) igual(rankDaNota(n), r);
+  } },
+  { nome: "notaDaOpcao: 0 a 4 vira 0 a 100", rodar() {
+    igual([0, 1, 2, 3, 4].map(notaDaOpcao).join(","), "0,25,50,75,100");
+  } },
+  { nome: "aplicarXP: limite de 300 por dia", rodar() {
+    igual(LIMITE_XP_DIA, 300);
+    igual(aplicarXP(0, 290, 30).xpGanho, 10);
+    igual(aplicarXP(0, 300, 30).xpGanho, 0);
+    igual(aplicarXP(100, 0, 30).xpTotal, 130);
+  } },
+  { nome: "aplicarXP: metade na Zona e foraDoLimite", rodar() {
+    igual(aplicarXP(0, 0, 30, { zona: true }).xpGanho, 15);
+    igual(aplicarXP(0, 300, 100, { foraDoLimite: true }).xpGanho, 100);
+    igual(aplicarXP(0, 300, 100, { foraDoLimite: true, zona: true }).xpGanho, 50);
+  } },
+  { nome: "aplicarXP: subir 2 níveis de uma vez e XP nunca diminui", rodar() {
+    const r = aplicarXP(70, 0, 130, { foraDoLimite: true }); // 200 no total: nível 3
+    igual(r.subiuPara.join(","), "2,3");
+    igual(aplicarXP(50, 0, -20).xpTotal, 50);
+  } },
+  { nome: "criarCacadorInicial: valores do Livro 2", rodar() {
+    const c = criarCacadorInicial("Teste");
+    igual(c.id, "eu"); igual(c.nivel, 1); igual(c.hp, 100); igual(c.cristais, 0);
+    igual(c.rankCacador, "E"); igual(c.titulo, "O Mais Fraco de Todos");
+    igual(c.atributos.forca, null); igual(Object.keys(c.atributos).length, 8);
+  } },
+  { nome: "calcularGanho: level up dá 3 Pontos de Foco; HP e Cristais limitados", rodar() {
+    const c = criarCacadorInicial("T");
+    const r = calcularGanho(c, criarDiaVazio("2026-11-24"), { xp: 80, cristais: 1, hp: 10, tipo: "teste" });
+    igual(r.cacador.nivel, 2); igual(r.cacador.pontosFoco, 3);
+    igual(r.cacador.hp, 100); igual(r.evento.hp, 0);
+    igual(r.dia.xpDia, 80); igual(r.subiuPara.join(","), "2");
+    const r2 = calcularGanho(c, criarDiaVazio("2026-11-24"), { cristais: -10, hp: -500 });
+    igual(r2.cacador.cristais, 0); igual(r2.cacador.hp, 0);
   } },
 );
