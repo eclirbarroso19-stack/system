@@ -467,7 +467,7 @@ O caminho é sempre o mesmo: situação → pensamento → emoção → reação
 | Linguagem | HTML + CSS + JavaScript puro, com módulos, **sem etapa de build** |
 | Dados | IndexedDB no celular + Backup/Restaurar em arquivo `.json` |
 | Modelo de dados | **completo desde a v1** (prevê as 7 áreas), com número de versão e migração automática, para que nenhuma versão apague registros da anterior |
-| Bibliotecas e fontes | arquivos **locais** dentro do app (Chart.js, Orbitron, Rajdhani), nada depende de internet |
+| Bibliotecas e fontes | arquivos **locais** dentro do app (Chart.js, Audiowide, Rajdhani), nada depende de internet |
 | Virada do dia | **às 4h da manhã** (registros feitos até 3h59 contam para o dia anterior) |
 | Backup | lembrado toda sexta, no Conselho de Sexta |
 | Lembretes | **v1 sem notificações**; alarmes do celular (8h e 21h) |
@@ -498,7 +498,26 @@ O caminho é sempre o mesmo: situação → pensamento → emoção → reação
 | Roxo | `#7B2FF7` |
 | Azul neon | `#00D4FF` |
 | Texto claro | `#E8F7FF` |
-| Fonte de títulos | Orbitron |
+| Fonte de títulos | Audiowide (trocada em 22/11/2026: o til da Orbitron parecia crase) |
 | Fonte de texto | Rajdhani |
 | Mensagens do Sistema | caixa com borda azul neon, texto em MAIÚSCULAS entre colchetes |
 | Logo / ícone | portal em losango com a runa "S" (aprovado em 21/11/2026), arquivos em `design/` |
+
+### 16.4 Regras anti-trava (revisão de riscos da v1, aprovada em 21/11/2026)
+
+| # | Risco | Regra |
+|---|---|---|
+| 1 | Claude Code parando para pedir permissão | permissões configuradas uma vez em `.claude/settings.json` na etapa 0.2 |
+| 2 | 1º envio ao GitHub | `git config` (nome/e-mail), login no GitHub e ativação do GitHub Pages feitos pelo Eclir na 0.2 |
+| 3 | Dia errado | usar sempre a **hora local do celular**; nunca `toISOString()` para a chave do dia; o dia vira às 4h |
+| 4 | Celular mostrando a versão velha | cache com número de versão + aviso `[NOVA VERSÃO DISPONÍVEL]` com botão de atualizar |
+| 5 | Abrir com duplo clique não funciona | testar sempre com servidor local (`npx serve`) |
+| 6 | Links quebrados no GitHub Pages | todos os caminhos **relativos** (`./`), porque o app mora em `/system/` |
+| 7 | Claude Code "melhorando" demais | proibido framework, etapa de build ou dependência nova |
+| 8 | Prompt acabar no meio | salvar progresso no PAINEL e fazer commit a cada sub-passo; o Prompt B retoma |
+| 9 | Android apagar dados | pedir `navigator.storage.persist()` + backup |
+| 10 | Backup vazar no repositório público | backups fora da pasta do código + `.gitignore` bloqueando `*.json` de backup |
+
+**Redes de segurança:**
+- `tests.html` confere automaticamente as regras de XP, HP, nível, rank e virada do dia.
+- **Plano B:** se travar, o Eclir leva o erro ao Claude no projeto, que lê os arquivos do notebook e monta o prompt de conserto (sem gastar mensagem do Claude Code).

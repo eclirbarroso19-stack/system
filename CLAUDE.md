@@ -31,7 +31,7 @@ Textos que aparecem no app vêm **literalmente** de `docs/textos-v1.md`. Não in
 
 - **HTML + CSS + JavaScript puro**, com módulos ES (`<script type="module">`).
   - **Proibido:** framework (React, Vue...), TypeScript, bundler, etapa de build, `npm install` de dependência.
-  - As únicas bibliotecas externas são o **Chart.js** e as fontes **Orbitron/Rajdhani**, todas como **arquivos locais** em `lib/` e `fontes/`.
+  - As únicas bibliotecas externas são o **Chart.js** e as fontes **Audiowide/Rajdhani**, todas como **arquivos locais** em `lib/` e `fontes/`.
 - **Offline total:** nada depende de internet depois de instalado.
 - **Caminhos sempre relativos** (`./css/estilo.css`, nunca `/css/estilo.css`). O app mora em `https://eclirbarroso19-stack.github.io/system/`.
 - **Dados no IndexedDB** (`js/nucleo/db.js`), com backup e restauração em arquivo `.json`. Nada sai do celular sem o usuário pedir.
@@ -71,7 +71,7 @@ Textos que aparecem no app vêm **literalmente** de `docs/textos-v1.md`. Não in
 | Azul neon | `#00D4FF` |
 | Texto | `#E8F7FF` (secundário `#8A9BB0`) |
 | Perigo / HP baixo | `#FF3B5C` |
-| Títulos | Orbitron |
+| Títulos | Audiowide |
 | Texto corrido | Rajdhani |
 
 - **Mensagens do Sistema:** caixa com borda azul neon, brilho suave (`box-shadow`), texto em MAIÚSCULAS entre colchetes, aparecendo com uma animação curta de "digitação" ou fade.
