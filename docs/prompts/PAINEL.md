@@ -5,8 +5,8 @@
 > Status: ✅ concluído · 🔄 em andamento · ⬜ aberto
 
 **Atualizado em:** 22/11/2026
-**Etapa atual:** 1.1 (concluída; aguardando teste do Eclir)
-**Próximo passo:** Eclir testar o checklist da 1.1. Depois, etapa 1.2.
+**Etapa atual:** 1.2 (concluída; aguardando teste do Eclir)
+**Próximo passo:** Eclir testar o checklist da 1.2 (backup fora da pasta system). Depois, etapa 1.3.
 
 ---
 
@@ -15,13 +15,13 @@
 | Versão | Etapas | Progresso |
 |---|---|---|
 | Etapa 0: Preparação | 4/4 | ██████████ 100% |
-| v1: Primeiro SYSTEM no celular | 1/8 | █░░░░░░░░░ 9% |
+| v1: Primeiro SYSTEM no celular | 2/8 | ██░░░░░░░░ 18% |
 | v2: Diagnóstico + Dinheiro | 0/7 | ░░░░░░░░░░ 0% |
 | v3: Corpo + Gestão | 0/7 | ░░░░░░░░░░ 0% |
 | v4: Mente + Sombras + Relacionamentos | 0/6 | ░░░░░░░░░░ 0% |
 | v5: Profissional + Espiritualidade + Progressão | 0/7 | ░░░░░░░░░░ 0% |
 | v6: Portais Ocultos + Arte e Som | 0/6 | ░░░░░░░░░░ 0% |
-| **Geral** | **5/45** | **░░░░░░░░░░ 5%** |
+| **Geral** | **6/45** | **█░░░░░░░░░ 8%** |
 
 > O progresso é pesado pelos dias de cada etapa (🔄 conta metade). O painel visual (`painel.html`) calcula sozinho.
 
@@ -41,7 +41,7 @@
 | | # | Etapa | Dias | Arquivo |
 |---|---|---|---|---|
 | ✅ | 1.1 | Esqueleto do app | 2 | `v1/1.1-esqueleto.md` |
-| 🔄 | 1.2 | Memória do app + Backup | 2 | `v1/1.2-memoria.md` |
+| ✅ | 1.2 | Memória do app + Backup | 2 | `v1/1.2-memoria.md` |
 | ⬜ | 1.3 | Despertar Rápido + Status | 3 | `v1/1.3-despertar-status.md` |
 | ⬜ | 1.4 | Missões diárias | 3 | `v1/1.4-missoes.md` |
 | ⬜ | 1.5 | Registro do Ouro | 2 | `v1/1.5-registro-ouro.md` |
@@ -70,6 +70,7 @@ Os nomes das etapas estão em `painel-dados.js` e os esboços em `v2/` … `v6/e
 | Data | O que aconteceu |
 |---|---|
 | 22/11/2026 | Painel melhorado: etapas abrem formatadas no painel, com COPIAR, checklist marcável e TESTEI E ESTÁ OK (o progresso é marcado só pelo Claude Code). Novo `gerar-painel.mjs` gera o `etapas-dados.js`. |
+| 22/11/2026 | Etapa 1.2 concluída: banco IndexedDB (20 stores, modo ?teste=1), migrações, backup/restaurar/apagar tudo, lembrete da sexta, formato.js e 17 testes verdes. Antes: ajustes da 1.1 (fonte Audiowide no lugar da Orbitron, cores do tests.html, id no manifesto). Versão do app 0.1.3. |
 | 22/11/2026 | Etapa 1.1 concluída: Chart.js, fontes e ícones locais; manifesto; CSS neon; casca com 6 rotas; ui.js; textos.js; service worker com aviso [NOVA VERSÃO DISPONÍVEL]; 8 testes verdes. 0.2 marcada ✅ (Eclir já fez o push). |
 | 22/11/2026 | Etapa 0.2 (parte do Claude Code): criados package.json, página de teste (index.html), js/nucleo/dia.js, testes (tests/testes.js, tests/rodar.mjs, tests.html) e primeiro commit. Sem push: falta o Eclir fazer o push e ligar o Pages. |
 | 21/11/2026 | Arquivo de prompts montado pelo Claude: CLAUDE.md, permissões, .gitignore, PAINEL e etapas da v1. Aguardando revisão do Eclir. |
