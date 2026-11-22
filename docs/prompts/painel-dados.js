@@ -3,14 +3,14 @@
 // status: "feito" | "andamento" | "aberto"
 window.PAINEL = {
   atualizadoEm: "22/11/2026",
-  etapaAtual: "0.2",
-  proximoPasso: "Eclir: fazer o primeiro push (passo 7), ligar o Pages (passo 8) e testar no celular. Depois, etapa 1.1.",
+  etapaAtual: "1.1",
+  proximoPasso: "Eclir: testar o checklist da 1.1. Depois, etapa 1.2.",
   versoes: [
     {
       id: "0", nome: "Etapa 0", subtitulo: "Preparação",
       etapas: [
         { id: "0.1", nome: "Arquivo de prompts", dias: 2, status: "feito", arquivo: "00-COMO-USAR.md" },
-        { id: "0.2", nome: "Ferramentas e anti-trava", dias: 3, status: "andamento", arquivo: "v1/0.2-preparar-ferramentas.md" },
+        { id: "0.2", nome: "Ferramentas e anti-trava", dias: 3, status: "feito", arquivo: "v1/0.2-preparar-ferramentas.md" },
         { id: "0.3", nome: "Identidade visual", dias: 0, status: "feito", arquivo: "" },
         { id: "0.4", nome: "Textos da v1", dias: 1, status: "feito", arquivo: "" }
       ]
@@ -18,7 +18,7 @@ window.PAINEL = {
     {
       id: "1", nome: "v1", subtitulo: "Primeiro SYSTEM no celular",
       etapas: [
-        { id: "1.1", nome: "Esqueleto do app", dias: 2, status: "aberto", arquivo: "v1/1.1-esqueleto.md" },
+        { id: "1.1", nome: "Esqueleto do app", dias: 2, status: "feito", arquivo: "v1/1.1-esqueleto.md" },
         { id: "1.2", nome: "Memória do app + Backup", dias: 2, status: "aberto", arquivo: "v1/1.2-memoria.md" },
         { id: "1.3", nome: "Despertar Rápido + Status", dias: 3, status: "aberto", arquivo: "v1/1.3-despertar-status.md" },
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "aberto", arquivo: "v1/1.4-missoes.md" },
@@ -88,6 +88,7 @@ window.PAINEL = {
     }
   ],
   diario: [
+    { data: "22/11/2026", texto: "Etapa 1.1 concluída: bibliotecas, fontes e ícones locais; manifesto; CSS neon; casca com 6 rotas; ui.js; textos.js; service worker com aviso de nova versão; 8 testes verdes. Etapa 0.2 marcada como feita." },
     { data: "22/11/2026", texto: "Etapa 0.2 (parte do Claude Code): criados package.json, página de teste (index.html), js/nucleo/dia.js, testes (tests/testes.js, tests/rodar.mjs, tests.html) e primeiro commit. Sem push: falta o Eclir fazer o push e ligar o Pages." },
     { data: "22/11/2026", texto: "Painel melhorado: as etapas abrem formatadas dentro do painel, com botão COPIAR, checklist marcável e botão TESTEI E ESTÁ OK, que mostra o prompt da próxima. O progresso é marcado só pelo Claude Code." },
     { data: "21/11/2026", texto: "Arquivo de prompts montado pelo Claude: CLAUDE.md, permissões, .gitignore, PAINEL e etapas da v1. Aguardando revisão do Eclir." },
