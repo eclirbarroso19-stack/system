@@ -4,30 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SYSTEM: testes</title>
+<link rel="stylesheet" href="./css/estilo.css">
 <style>
-  body { margin: 0; padding: 16px; background: #0A0A12; color: #E8F7FF; font-family: system-ui, sans-serif; }
-  h1 { color: #00D4FF; font-size: 1.2rem; text-shadow: 0 0 10px #00D4FF88; }
-  ul { list-style: none; padding: 0; }
-  li { background: #12121F; border-left: 4px solid; margin: 8px 0; padding: 10px 12px; }
-  .ok { border-color: #00D4FF; }
-  .erro { border-color: #FF3B5C; color: #FF3B5C; }
+  body { padding: 16px; }
+  ul { list-style: none; padding: 0; margin: 0 0 16px; }
+  li { background: var(--cartao); border-left: 4px solid; border-radius: 6px; margin: 8px 0; padding: 10px 12px; }
+  li.ok { border-color: var(--azul); }
+  li.erro { border-color: var(--perigo); color: var(--perigo); }
 </style>
 </head>
 <body>
-<h1>[TESTES DO SYSTEM]</h1>
+<h1 class="titulo-tela">[TESTES DO SYSTEM]</h1>
 <ul id="lista"></ul>
-<p id="total"></p>
+<div class="msg-sistema" id="total"></div>
 <script type="module">
   import { testes } from "./tests/testes.js";
   const lista = document.getElementById("lista");
   let falhas = 0;
   for (const t of testes) {
     const li = document.createElement("li");
-    try { t.rodar(); li.className = "ok"; li.textContent = "✔ " + t.nome; }
+    try { await t.rodar(); li.className = "ok"; li.textContent = "✔ " + t.nome; }
     catch (e) { falhas++; li.className = "erro"; li.textContent = "✘ " + t.nome + ": " + e.message; }
     lista.appendChild(li);
   }
-  document.getElementById("total").textContent = (testes.length - falhas) + "/" + testes.length + " testes passaram";
+  const total = document.getElementById("total");
+  total.textContent = "[" + (testes.length - falhas) + "/" + testes.length + " TESTES PASSARAM]";
+  if (falhas) total.style.borderColor = "var(--perigo)", total.style.color = "var(--perigo)";
 </script>
 </body>
 </html>
