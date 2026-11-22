@@ -13,3 +13,15 @@ export function horasAteVirada(data = new Date()) {
   if (data.getTime() >= prox.getTime()) prox.setDate(prox.getDate() + 1);
   return Math.ceil((prox.getTime() - data.getTime()) / 3600000);
 }
+
+// Quantos dias há de a até b (chaves "AAAA-MM-DD"). Positivo se b é depois de a.
+export function diasEntre(a, b) {
+  const t = (c) => { const [y, m, d] = c.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+  return Math.round((t(b) - t(a)) / 86400000);
+}
+
+// 0 = domingo ... 5 = sexta ... 6 = sábado, para uma chave "AAAA-MM-DD".
+export function diaDaSemana(dia) {
+  const [y, m, d] = dia.split("-").map(Number);
+  return new Date(y, m - 1, d).getDay();
+}

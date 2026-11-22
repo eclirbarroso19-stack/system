@@ -136,3 +136,13 @@ export async function importarTudo(stores) {
   }
   return terminou(tx);
 }
+
+// Atalhos para a store "meta" (registros { chave, valor }).
+export async function lerMeta(chave) {
+  const r = await obter("meta", chave);
+  return r ? r.valor : undefined;
+}
+
+export async function gravarMeta(chave, valor) {
+  return salvar("meta", { chave, valor });
+}
