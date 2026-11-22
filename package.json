@@ -1,0 +1,1 @@
+{ "name": "system", "private": true, "type": "module", "scripts": { "test": "node tests/rodar.mjs" } }

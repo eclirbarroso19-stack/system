@@ -1,0 +1,22 @@
+# SYSTEM: o repositorio e PUBLICO. Nada pessoal entra aqui.
+
+# Backups do app (dados pessoais) - guarde fora desta pasta
+system-backup-*.json
+*backup*.json
+
+# Planilhas e documentos pessoais
+*.xlsx
+*.xls
+*.csv
+*.ods
+
+# Configuracoes locais do Claude Code (as do projeto ficam em .claude/settings.json)
+.claude/settings.local.json
+
+# Lixo do sistema e do editor
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.log

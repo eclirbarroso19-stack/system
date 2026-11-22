@@ -1,0 +1,50 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash(git status*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push)",
+      "Bash(git push origin main)",
+      "Bash(git push --tags)",
+      "Bash(git tag *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git init*)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git mv *)",
+      "Bash(node --check *)",
+      "Bash(node tests/*)",
+      "Bash(node docs/prompts/gerar-painel.mjs)",
+      "Bash(npm test*)",
+      "Bash(node -v)",
+      "Bash(ls *)",
+      "Bash(dir *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(copy *)",
+      "Bash(curl -L -o lib/*)",
+      "Bash(curl -L -o fontes/*)",
+      "Bash(curl -sL -o lib/*)",
+      "Bash(curl -sL -o fontes/*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(rm -rf*)",
+      "Bash(npm install*)",
+      "Bash(npm i *)",
+      "Bash(npx serve*)",
+      "Read(**/system-backup-*.json)"
+    ]
+  }
+}

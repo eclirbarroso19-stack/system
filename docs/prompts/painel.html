@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do SYSTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: "Orbitron"; font-weight: 700; src: url("../../fontes/orbitron-700.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "Rajdhani"; font-weight: 500; src: url("../../fontes/rajdhani-500.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "Rajdhani"; font-weight: 700; src: url("../../fontes/rajdhani-700.woff2") format("woff2"); font-display: swap; }
+
+  :root {
+    --fundo: #0A0A12; --card: #12121F; --card2: #181829; --linha: #23233A;
+    --roxo: #7B2FF7; --azul: #00D4FF; --texto: #E8F7FF; --apagado: #8A9BB0;
+    --verde: #2BE38B; --amarelo: #FFC94D; --vermelho: #FF3B5C;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--fundo); color: var(--texto); }
+  body {
+    font-family: "Rajdhani", "Segoe UI", sans-serif; font-size: 17px; line-height: 1.45;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(123,47,247,.18), transparent 60%),
+      radial-gradient(700px 400px at -10% 20%, rgba(0,212,255,.10), transparent 60%),
+      var(--fundo);
+    min-height: 100vh;
+  }
+  body.travado { overflow: hidden; }
+  .pagina { max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1, h2, h3, .orb { font-family: "Orbitron", "Segoe UI", sans-serif; letter-spacing: .06em; }
+  button { font-family: inherit; }
+
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  header svg { width: 72px; height: 72px; flex: none; filter: drop-shadow(0 0 12px rgba(0,212,255,.45)); }
+  header h1 { margin: 0; font-size: clamp(22px, 5vw, 32px); font-weight: 900;
+    background: linear-gradient(90deg, var(--texto), var(--azul)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  header p { margin: 2px 0 0; color: var(--apagado); font-size: 15px; }
+
+  .sistema {
+    border: 1px solid var(--azul); border-radius: 6px; padding: 14px 16px; margin: 0 0 20px;
+    background: rgba(0,212,255,.06); box-shadow: 0 0 18px rgba(0,212,255,.25), inset 0 0 18px rgba(0,212,255,.06);
+  }
+  .sistema .rotulo { font-family: "Orbitron", sans-serif; font-size: 12px; color: var(--azul); letter-spacing: .12em; margin-bottom: 6px; }
+  .sistema .msg { font-weight: 700; font-size: 18px; }
+  .sistema .acoes { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    min-height: 44px; padding: 10px 18px; border-radius: 6px; border: 1px solid var(--azul); cursor: pointer;
+    background: transparent; color: var(--azul); font-family: "Orbitron", sans-serif; font-size: 13px; letter-spacing: .08em; font-weight: 700;
+  }
+  .btn:hover { background: rgba(0,212,255,.1); }
+  .btn.primario { border: 0; color: #fff; background: linear-gradient(90deg, var(--roxo), var(--azul)); box-shadow: 0 0 16px rgba(123,47,247,.5); }
+  .btn.verde { border-color: var(--verde); color: var(--verde); }
+  .btn.verde:hover { background: rgba(43,227,139,.1); }
+  .btn.discreto { border-color: var(--linha); color: var(--apagado); font-size: 12px; }
+
+  .geral { background: var(--card); border: 1px solid var(--linha); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  .geral .topo { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .geral .pct { font-family: "Orbitron", sans-serif; font-size: 34px; font-weight: 900; color: var(--azul); text-shadow: 0 0 14px rgba(0,212,255,.6); }
+  .barra { height: 12px; border-radius: 6px; background: #1B1B2E; overflow: hidden; margin-top: 10px; border: 1px solid var(--linha); }
+  .barra > span { display: block; height: 100%; width: 0; border-radius: 6px;
+    background: linear-gradient(90deg, var(--roxo), var(--azul)); box-shadow: 0 0 12px rgba(0,212,255,.6);
+    transition: width 1.2s cubic-bezier(.2,.8,.2,1); }
+  .barra.fina { height: 8px; }
+  .legenda { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; color: var(--apagado); font-size: 15px; }
+
+  .versao { background: var(--card); border: 1px solid var(--linha); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .versao.atual { border-color: var(--roxo); box-shadow: 0 0 16px rgba(123,47,247,.35); }
+  .versao summary { list-style: none; cursor: pointer; padding: 14px 16px; }
+  .versao summary::-webkit-details-marker { display: none; }
+  .versao .cab { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .versao h2 { margin: 0; font-size: 16px; }
+  .versao h2 small { font-family: "Rajdhani", sans-serif; font-size: 16px; color: var(--apagado); letter-spacing: 0; font-weight: 600; margin-left: 8px; }
+  .versao .num { font-family: "Orbitron", sans-serif; font-size: 14px; color: var(--azul); white-space: nowrap; }
+  .etapas { list-style: none; margin: 0; padding: 0 16px 12px; }
+  .etapas li { display: grid; grid-template-columns: 28px 44px 1fr auto 20px; gap: 8px; align-items: center;
+    padding: 10px 6px; border-top: 1px solid var(--linha); cursor: pointer; border-radius: 4px; }
+  .etapas li:hover { background: rgba(0,212,255,.06); }
+  .etapas li.sem-arquivo { cursor: default; }
+  .etapas li.sem-arquivo:hover { background: none; }
+  .etapas .ic { font-size: 18px; text-align: center; }
+  .etapas .id { font-family: "Orbitron", sans-serif; font-size: 13px; color: var(--apagado); }
+  .etapas .nome { font-weight: 600; }
+  .etapas .dias { color: var(--apagado); font-size: 14px; white-space: nowrap; }
+  .etapas .seta { color: var(--azul); font-size: 18px; }
+  .etapas li.feito .nome { color: var(--verde); }
+  .etapas li.andamento .nome { color: var(--amarelo); }
+  .etapas li.atual { background: linear-gradient(90deg, rgba(123,47,247,.2), transparent); }
+
+  h3 { font-size: 14px; color: var(--azul); margin: 28px 0 10px; letter-spacing: .12em; }
+  .diario { list-style: none; margin: 0; padding: 0; }
+  .diario li { padding: 10px 14px; border-left: 2px solid var(--roxo); background: var(--card); margin-bottom: 8px; border-radius: 0 8px 8px 0; }
+  .diario .data { font-family: "Orbitron", sans-serif; font-size: 12px; color: var(--azul); display: block; margin-bottom: 2px; }
+  footer { margin-top: 32px; color: var(--apagado); font-size: 14px; text-align: center; }
+
+  /* ---------- Leitor de etapa ---------- */
+  #leitor { position: fixed; inset: 0; z-index: 10; background: rgba(5,5,10,.82); backdrop-filter: blur(4px);
+    display: none; overflow-y: auto; }
+  #leitor.aberto { display: block; animation: surgir .2s ease-out; }
+  @keyframes surgir { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .folha { max-width: 820px; margin: 0 auto; min-height: 100%; background: var(--fundo);
+    border-left: 1px solid var(--linha); border-right: 1px solid var(--linha); padding: 0 0 40px; }
+  .folha-topo { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; background: rgba(10,10,18,.96); border-bottom: 1px solid var(--roxo); box-shadow: 0 4px 18px rgba(123,47,247,.25); }
+  .folha-topo .t { flex: 1; font-family: "Orbitron", sans-serif; font-size: 13px; letter-spacing: .08em; color: var(--azul); }
+  .conteudo { padding: 8px 20px; }
+
+  .conteudo h1 { font-size: 22px; margin: 18px 0 12px; color: var(--texto); }
+  .conteudo h2 { font-size: 16px; margin: 30px 0 12px; color: var(--azul); padding-bottom: 6px; border-bottom: 1px solid var(--linha); }
+  .conteudo h3 { font-size: 14px; margin: 22px 0 8px; color: var(--texto); letter-spacing: .05em; }
+  .conteudo h4 { font-family: "Orbitron", sans-serif; font-size: 13px; margin: 18px 0 6px; color: var(--apagado); }
+  .conteudo p { margin: 8px 0; }
+  .conteudo strong { color: #fff; }
+  .conteudo a { color: var(--azul); }
+  .conteudo hr { border: 0; border-top: 1px dashed var(--linha); margin: 24px 0; }
+  .conteudo ul, .conteudo ol { padding-left: 22px; margin: 6px 0; }
+  .conteudo li { margin: 4px 0; }
+  .conteudo code { font-family: Consolas, "Courier New", monospace; font-size: 14px; background: var(--card2);
+    border: 1px solid var(--linha); border-radius: 4px; padding: 1px 5px; color: #BFE9FF; }
+  .conteudo blockquote { margin: 12px 0; padding: 10px 14px; border-left: 3px solid var(--roxo); background: rgba(123,47,247,.08); border-radius: 0 6px 6px 0; }
+  .tabela { overflow-x: auto; margin: 10px 0; }
+  .conteudo table { border-collapse: collapse; width: 100%; font-size: 16px; }
+  .conteudo th, .conteudo td { border: 1px solid var(--linha); padding: 8px 10px; text-align: left; vertical-align: top; }
+  .conteudo th { background: var(--card2); font-family: "Orbitron", sans-serif; font-size: 12px; letter-spacing: .06em; color: var(--azul); }
+  .conteudo tr td:first-child strong { color: var(--azul); }
+
+  .codigo { position: relative; margin: 10px 0; border: 1px solid var(--linha); border-radius: 8px; background: #0E0E1A; }
+  .codigo pre { margin: 0; padding: 14px; overflow-x: auto; font-family: Consolas, "Courier New", monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .codigo .copiar { position: absolute; top: 8px; right: 8px; min-height: 32px; padding: 4px 12px; font-size: 11px; }
+  .codigo.prompt { border: 1px solid var(--azul); box-shadow: 0 0 18px rgba(0,212,255,.25); background: rgba(0,212,255,.05); }
+  .codigo.prompt::before { content: "COPIE E COLE NO CLAUDE CODE"; display: block; padding: 10px 14px 0;
+    font-family: "Orbitron", sans-serif; font-size: 11px; letter-spacing: .12em; color: var(--azul); padding-right: 100px; }
+  .codigo.prompt pre { padding-top: 8px; padding-right: 100px; font-size: 15px; color: #fff; }
+
+  .tarefa { list-style: none; margin-left: -22px; }
+  .tarefa label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; padding: 4px 0; }
+  .tarefa input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--verde); flex: none; cursor: pointer; }
+  .tarefa input:checked + span { color: var(--apagado); text-decoration: line-through; }
+  .contador { font-family: "Orbitron", sans-serif; font-size: 12px; color: var(--verde); margin-left: 8px; letter-spacing: .05em; }
+
+  details.tecnica { margin: 28px 0 0; border: 1px solid var(--linha); border-radius: 8px; background: var(--card); }
+  details.tecnica > summary { cursor: pointer; padding: 14px 16px; font-family: "Orbitron", sans-serif; font-size: 13px; color: var(--apagado); letter-spacing: .06em; }
+  details.tecnica > div { padding: 0 16px 12px; }
+
+  .fim-etapa { margin: 28px 20px 0; padding: 18px; border-radius: 10px; border: 1px solid var(--verde);
+    background: rgba(43,227,139,.06); box-shadow: 0 0 18px rgba(43,227,139,.15); }
+  .fim-etapa .orb { font-size: 13px; color: var(--verde); letter-spacing: .1em; margin-bottom: 6px; }
+  .fim-etapa p { margin: 6px 0 12px; }
+  .fim-etapa .acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+  .fim-etapa.confirmar { border-color: var(--amarelo); background: rgba(255,201,77,.06); }
+  .fim-etapa.confirmar .orb { color: var(--amarelo); }
+
+  @media (max-width: 520px) {
+    .etapas li { grid-template-columns: 24px 38px 1fr 16px; }
+    .etapas .dias { grid-column: 3; grid-row: 2; }
+    .etapas .seta { grid-column: 4; grid-row: 1; }
+    .conteudo { padding: 8px 14px; }
+    .fim-etapa { margin: 24px 14px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <header>
+    <svg viewBox="0 0 512 512" aria-hidden="true">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B2FF7"/><stop offset="1" stop-color="#00D4FF"/></linearGradient>
+      </defs>
+      <rect width="512" height="512" rx="40" fill="#0A0A12"/>
+      <polygon points="256,78 434,256 256,434 78,256" fill="none" stroke="url(#g)" stroke-width="14" stroke-linejoin="round"/>
+      <polygon points="256,124 388,256 256,388 124,256" fill="none" stroke="url(#g)" stroke-width="3" stroke-opacity="0.6"/>
+      <g fill="#00D4FF"><circle cx="256" cy="78" r="7"/><circle cx="434" cy="256" r="7"/><circle cx="256" cy="434" r="7"/><circle cx="78" cy="256" r="7"/></g>
+      <polyline points="300,182 214,214 298,298 212,330" fill="none" stroke="#E8F7FF" stroke-width="20" stroke-linecap="square"/>
+      <line x1="300" y1="168" x2="300" y2="196" stroke="#E8F7FF" stroke-width="10"/>
+      <line x1="212" y1="316" x2="212" y2="344" stroke="#E8F7FF" stroke-width="10"/>
+    </svg>
+    <div>
+      <h1>PAINEL DO SYSTEM</h1>
+      <p id="atualizado">Carregando…</p>
+    </div>
+  </header>
+
+  <div class="sistema">
+    <div class="rotulo">[PRÓXIMO PASSO]</div>
+    <div class="msg" id="proximo"></div>
+    <div class="acoes" id="proximoAcoes"></div>
+  </div>
+
+  <section class="geral">
+    <div class="topo">
+      <div>
+        <div class="orb" style="font-size:13px;color:var(--apagado)">PROGRESSO ATÉ A VERSÃO PESSOAL COMPLETA</div>
+        <div id="geralTexto" style="margin-top:4px"></div>
+      </div>
+      <div class="pct" id="geralPct">0%</div>
+    </div>
+    <div class="barra"><span id="geralBarra"></span></div>
+    <div class="legenda"><span>✅ concluído</span><span>🔄 em andamento</span><span>⬜ aberto</span><span>· toque numa etapa para abrir</span></div>
+  </section>
+
+  <div id="versoes"></div>
+
+  <h3>[DIÁRIO DE BORDO]</h3>
+  <ul class="diario" id="diario"></ul>
+
+  <footer>
+    <button class="btn discreto" id="comoUsar">COMO USAR</button>
+    <button class="btn discreto" id="modelosB">MODELOS DO PROMPT B</button>
+    <p>Atualizado pelo Claude Code ao fim de cada etapa · as caixinhas do checklist ficam salvas neste navegador</p>
+  </footer>
+</div>
+
+<div id="leitor" role="dialog" aria-modal="true">
+  <div class="folha">
+    <div class="folha-topo">
+      <button class="btn" id="voltar">← VOLTAR</button>
+      <div class="t" id="leitorTitulo"></div>
+    </div>
+    <div class="conteudo" id="leitorConteudo"></div>
+    <div id="leitorFim"></div>
+  </div>
+</div>
+
+<script src="painel-dados.js"></script>
+<script src="etapas-dados.js"></script>
+<script>
+(function () {
+  var P = window.PAINEL;
+  var MD = window.ETAPAS_MD || {};
+  if (!P) { document.getElementById("atualizado").textContent = "Não achei painel-dados.js na mesma pasta."; return; }
+
+  var ICONE = { feito: "✅", andamento: "🔄", aberto: "⬜" };
+  var PESO = { feito: 1, andamento: 0.5, aberto: 0 };
+  var CH_CHECK = "system-painel-check:";
+
+  // ---------- memória do navegador (o que o Eclir marca) ----------
+  function lerLocal(chave, padrao) { try { var v = localStorage.getItem(chave); return v ? JSON.parse(v) : padrao; } catch (e) { return padrao; } }
+  function gravarLocal(chave, valor) { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) {} }
+
+  var todas = [];
+  P.versoes.forEach(function (v) { v.etapas.forEach(function (e) { e.versao = v; todas.push(e); }); });
+  function status(e) { return e.status; }
+  function etapaPorId(id) { for (var i = 0; i < todas.length; i++) if (todas[i].id === id) return todas[i]; return null; }
+  function proximaDepois(e) { var i = todas.indexOf(e); for (var j = i + 1; j < todas.length; j++) if (todas[j].status !== "feito" && todas[j].dias !== 0) return todas[j]; return null; }
+  function etapaAtual() {
+    var oficial = etapaPorId(P.etapaAtual);
+    if (oficial && status(oficial) !== "feito") return oficial;
+    for (var i = 0; i < todas.length; i++) if (status(todas[i]) !== "feito") return todas[i];
+    return null;
+  }
+
+  function progresso(etapas) {
+    var total = 0, feito = 0;
+    etapas.forEach(function (e) { var d = e.dias || 0.5; total += d; feito += d * PESO[status(e)]; });
+    return total ? Math.round(feito / total * 100) : 0;
+  }
+  function el(tag, cls, txt) { var x = document.createElement(tag); if (cls) x.className = cls; if (txt != null) x.textContent = txt; return x; }
+
+  // ---------- prompt para a próxima etapa ----------
+  function promptPara(anterior, prox) {
+    if (!prox) return null;
+    if (!/^v1\/1\.[1-7]/.test(prox.arquivo || "")) return null;
+    return "A etapa " + anterior.id + " passou no checklist. Execute agora a etapa " + prox.id + " do SYSTEM: marque " + anterior.id +
+      " como ✅ no PAINEL.md e no painel-dados.js (se ainda não estiver), depois siga a seção \"Especificação para o Claude Code\" de docs/prompts/" +
+      prox.arquivo + ", sub-passo por sub-passo, com commit a cada um. Trabalhe sem perguntar. No fim: testes, PAINEL, painel-dados.js, node docs/prompts/gerar-painel.mjs, commit, push e resumo.";
+  }
+  function dicaPara(prox) {
+    if (!prox) return "Todas as etapas concluídas. Rank S! 🏆";
+    if (prox.id === "0.2") return "A etapa 0.2 começa com você: abra e siga o Dia 1 (uns 40 min). O Claude Code só entra no Dia 2.";
+    if (/Uso real/.test(prox.nome)) return "Agora é usar o app de verdade por 5 dias úteis e anotar o que incomoda. Use o modelo B4 do Prompt B.";
+    if (/esboco/.test(prox.arquivo || "")) return "A próxima versão ainda está em esboço. Fale com o Claude no projeto: \"" + prox.versao.nome + " pronta para detalhar\".";
+    return "Abra a etapa " + prox.id + " e copie o PROMPT A. Se ainda tiver a 2ª mensagem do dia, use o prompt abaixo como Prompt B.";
+  }
+
+  // ---------- markdown simples ----------
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function inline(s) {
+    var guardados = [];
+    s = esc(s).replace(/`([^`]+)`/g, function (_, c) { guardados.push("<code>" + c + "</code>"); return "\u0000" + (guardados.length - 1) + "\u0000"; });
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, t, u) {
+      if (/\.md$/.test(u)) return '<a href="#" data-md="' + u + '">' + t + "</a>";
+      return '<a href="' + u + '" target="_blank" rel="noopener">' + t + "</a>";
+    });
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/(^|[\s(])_([^_]+)_(?=[\s).,:;!?]|$)/g, "$1<em>$2</em>");
+    s = s.replace(/(^|[\s(])\*([^*\s][^*]*)\*(?=[\s).,:;!?]|$)/g, "$1<em>$2</em>");
+    s = s.replace(/(https?:\/\/[^\s<]+[^\s<.,)])/g, function (u, _, pos, todo) {
+      var antes = todo.slice(Math.max(0, pos - 6), pos);
+      return /href="$/.test(antes) || /">$/.test(antes) ? u : '<a href="' + u + '" target="_blank" rel="noopener">' + u + "</a>";
+    });
+    return s.replace(/\u0000(\d+)\u0000/g, function (_, i) { return guardados[+i]; });
+  }
+  function celulas(linha) { return linha.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(function (c) { return c.trim(); }); }
+
+  function renderizar(md, arquivo) {
+    var linhas = md.replace(/\r/g, "").split("\n");
+    var html = [], i = 0, ultimoTitulo = "", nCheck = 0;
+    var pilhaListas = [];
+    function fecharListas(ate) { while (pilhaListas.length > ate) html.push("</" + pilhaListas.pop().tipo + ">"); }
+
+    while (i < linhas.length) {
+      var l = linhas[i];
+
+      if (/^```/.test(l)) {
+        fecharListas(0);
+        var bloco = []; i++;
+        while (i < linhas.length && !/^\s*```/.test(linhas[i])) { bloco.push(linhas[i]); i++; }
+        i++;
+        var ehPrompt = /PROMPT A|Prompt A \(cole|B\d\./i.test(ultimoTitulo) || /^(Execute a etapa|Etapa .* conserto|A etapa .* passou|Leia CLAUDE\.md)/.test(bloco[0] || "");
+        var texto = bloco.join("\n");
+        html.push('<div class="codigo' + (ehPrompt ? " prompt" : "") + '"><button class="btn copiar" data-copiar="' + encodeURIComponent(texto) + '">COPIAR</button><pre>' + esc(texto) + "</pre></div>");
+        continue;
+      }
+      var h = l.match(/^(#{1,4})\s+(.*)$/);
+      if (h) {
+        fecharListas(0);
+        ultimoTitulo = h[2];
+        if (h[1].length === 2 && /Especificação para o Claude Code/.test(h[2])) {
+          html.push('<details class="tecnica"><summary>⚙️ PARTE TÉCNICA (PARA O CLAUDE CODE) · você não precisa ler</summary><div>');
+          html.push("__FECHAR_TECNICA__");
+          i++; continue;
+        }
+        var nivel = h[1].length;
+        html.push("<h" + nivel + ">" + inline(h[2]) + (/Checklist/i.test(h[2]) ? '<span class="contador" data-contador></span>' : "") + "</h" + nivel + ">");
+        i++; continue;
+      }
+      if (/^---\s*$/.test(l)) { fecharListas(0); html.push("<hr>"); i++; continue; }
+      if (/^\s*\|/.test(l) && i + 1 < linhas.length && /^\s*\|[\s:|-]+\|\s*$/.test(linhas[i + 1])) {
+        fecharListas(0);
+        var cab = celulas(l); i += 2;
+        var vazioCab = cab.every(function (c) { return !c; });
+        var t = '<div class="tabela"><table>' + (vazioCab ? "" : "<thead><tr>" + cab.map(function (c) { return "<th>" + inline(c) + "</th>"; }).join("") + "</tr></thead>") + "<tbody>";
+        while (i < linhas.length && /^\s*\|/.test(linhas[i])) {
+          t += "<tr>" + celulas(linhas[i]).map(function (c) { return "<td>" + inline(c) + "</td>"; }).join("") + "</tr>"; i++;
+        }
+        html.push(t + "</tbody></table></div>"); continue;
+      }
+      if (/^>\s?/.test(l)) {
+        fecharListas(0);
+        var q = [];
+        while (i < linhas.length && /^>\s?/.test(linhas[i])) { q.push(inline(linhas[i].replace(/^>\s?/, ""))); i++; }
+        html.push("<blockquote>" + q.join("<br>") + "</blockquote>"); continue;
+      }
+      var li = l.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
+      if (li) {
+        var prof = Math.floor(li[1].length / 2) + 1;
+        var tipo = /\d/.test(li[2]) ? "ol" : "ul";
+        if (pilhaListas.length > prof) fecharListas(prof);
+        if (pilhaListas.length === prof && pilhaListas[prof - 1].tipo !== tipo) fecharListas(prof - 1);
+        while (pilhaListas.length < prof) { html.push("<" + tipo + ">"); pilhaListas.push({ tipo: tipo }); }
+        var tarefa = li[3].match(/^\[( |x)\]\s+(.*)$/i);
+        if (tarefa) {
+          var chave = CH_CHECK + arquivo + ":" + (nCheck++);
+          var marcado = lerLocal(chave, false) || tarefa[1].toLowerCase() === "x";
+          html.push('<li class="tarefa"><label><input type="checkbox" data-chave="' + chave + '"' + (marcado ? " checked" : "") + "><span>" + inline(tarefa[2]) + "</span></label></li>");
+        } else {
+          html.push("<li>" + inline(li[3]) + "</li>");
+        }
+        i++; continue;
+      }
+      if (/^\s*$/.test(l)) {
+        if (pilhaListas.length && i + 1 < linhas.length && /^(\s*)([-*]|\d+\.)\s+/.test(linhas[i + 1])) { i++; continue; }
+        fecharListas(0); i++; continue;
+      }
+      if (/^\s+\S/.test(l) && pilhaListas.length) { html.push('<p style="margin:2px 0 6px">' + inline(l.trim()) + "</p>"); i++; continue; }
+      fecharListas(0);
+      var par = [l]; i++;
+      while (i < linhas.length && /\S/.test(linhas[i]) && !/^(#|```|\||>|\s*([-*]|\d+\.)\s|---)/.test(linhas[i])) { par.push(linhas[i]); i++; }
+      html.push("<p>" + par.map(inline).join("<br>") + "</p>");
+    }
+    fecharListas(0);
+    var saida = html.join("\n");
+    var pos = saida.indexOf("__FECHAR_TECNICA__");
+    if (pos >= 0) saida = saida.replace("__FECHAR_TECNICA__", "") + "</div></details>";
+    return saida;
+  }
+
+  // ---------- leitor ----------
+  var leitor = document.getElementById("leitor");
+  var etapaAberta = null;
+
+  function abrirArquivo(arquivo, etapa) {
+    etapaAberta = etapa || null;
+    var md = MD[arquivo];
+    document.getElementById("leitorTitulo").textContent = etapa ? ("ETAPA " + etapa.id + " · " + etapa.nome.toUpperCase()) : arquivo.replace(/^.*\//, "").replace(".md", "").toUpperCase();
+    var c = document.getElementById("leitorConteudo");
+    c.innerHTML = md ? renderizar(md, arquivo) :
+      '<p>Não achei o texto deste arquivo. Peça ao Claude Code para rodar <code>node docs/prompts/gerar-painel.mjs</code>.</p>';
+    atualizarContador();
+    montarFim();
+    leitor.classList.add("aberto"); leitor.scrollTop = 0; document.body.classList.add("travado");
+  }
+  function fecharLeitor() { leitor.classList.remove("aberto"); document.body.classList.remove("travado"); }
+
+  function atualizarContador() {
+    var caixas = leitor.querySelectorAll("input[data-chave]");
+    if (!caixas.length) return;
+    var feitas = 0; caixas.forEach(function (x) { if (x.checked) feitas++; });
+    leitor.querySelectorAll("[data-contador]").forEach(function (s) { s.textContent = feitas + "/" + caixas.length; });
+  }
+
+  function montarFim(modo) {
+    var box = document.getElementById("leitorFim");
+    box.innerHTML = "";
+    var e = etapaAberta;
+    if (!e || e.status === "aberto") return;
+    var d = el("div", "fim-etapa");
+
+    if (modo !== "ok") {
+      d.appendChild(el("div", "orb", "[TESTOU ESTA ETAPA?]"));
+      d.appendChild(el("p", null, "Quem marca o progresso é o Claude Code, ao terminar o prompt. Aqui você só confirma que testou: se o checklist acima está ok, toque abaixo para pegar o prompt da próxima etapa. Se algo deu errado, use o modelo B1 (botão MODELOS DO PROMPT B no rodapé)."));
+      var ac = el("div", "acoes");
+      var b = el("button", "btn verde", "✅ TESTEI E ESTÁ OK");
+      b.onclick = function () { montarFim("ok"); };
+      ac.appendChild(b); d.appendChild(ac);
+    } else {
+      var prox = proximaDepois(e);
+      d.appendChild(el("div", "orb", "[PRÓXIMO PASSO DEPOIS DA ETAPA " + e.id + "]"));
+      d.appendChild(el("p", null, dicaPara(prox)));
+      var pr = promptPara(e, prox);
+      if (pr) {
+        var cod = el("div", "codigo prompt");
+        var bt = el("button", "btn copiar", "COPIAR"); bt.setAttribute("data-copiar", encodeURIComponent(pr));
+        cod.appendChild(bt); cod.appendChild(el("pre", null, pr)); d.appendChild(cod);
+      }
+      var ac3 = el("div", "acoes"); ac3.style.marginTop = "12px";
+      if (prox && prox.arquivo && MD[prox.arquivo]) {
+        var ir = el("button", "btn primario", "ABRIR ETAPA " + prox.id + " →");
+        ir.onclick = function () { abrirArquivo(prox.arquivo, prox); };
+        ac3.appendChild(ir);
+      }
+      d.appendChild(ac3);
+    }
+    box.appendChild(d);
+  }
+
+  leitor.addEventListener("click", function (ev) {
+    var alvo = ev.target;
+    if (alvo === leitor) { fecharLeitor(); return; }
+    var cop = alvo.closest && alvo.closest("[data-copiar]");
+    if (cop) {
+      var txt = decodeURIComponent(cop.getAttribute("data-copiar"));
+      var ok = function () { cop.textContent = "COPIADO ✓"; setTimeout(function () { cop.textContent = "COPIAR"; }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, function () { copiarVelho(txt); ok(); });
+      else { copiarVelho(txt); ok(); }
+      return;
+    }
+    var link = alvo.closest && alvo.closest("a[data-md]");
+    if (link) {
+      ev.preventDefault();
+      var alvoMd = link.getAttribute("data-md").replace(/^\.\//, "");
+      var chaves = Object.keys(MD), achado = null;
+      chaves.forEach(function (k) { if (k === alvoMd || k.endsWith("/" + alvoMd) || k.endsWith(alvoMd)) achado = achado || k; });
+      if (achado) abrirArquivo(achado, null);
+    }
+  });
+  leitor.addEventListener("change", function (ev) {
+    var x = ev.target;
+    if (x.matches && x.matches("input[data-chave]")) { gravarLocal(x.getAttribute("data-chave"), x.checked); atualizarContador(); }
+  });
+  function copiarVelho(t) { var a = document.createElement("textarea"); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} a.remove(); }
+  document.getElementById("voltar").onclick = fecharLeitor;
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") fecharLeitor(); });
+  document.getElementById("comoUsar").onclick = function () { abrirArquivo("00-COMO-USAR.md", null); };
+  document.getElementById("modelosB").onclick = function () { abrirArquivo("v1/B-modelo-conserto.md", null); };
+
+  // ---------- painel ----------
+  function montarPainel() {
+    var atual = etapaAtual();
+    document.getElementById("atualizado").textContent = "Atualizado em " + P.atualizadoEm + " · etapa atual: " + (atual ? atual.id : "—");
+    var prox = document.getElementById("proximo"), acoes = document.getElementById("proximoAcoes");
+    acoes.innerHTML = "";
+    if (atual && atual.id !== P.etapaAtual) prox.textContent = "Etapa " + atual.id + ": " + atual.nome + ". " + dicaPara(atual);
+    else prox.textContent = P.proximoPasso;
+    if (atual && atual.arquivo && MD[atual.arquivo]) {
+      var b = el("button", "btn primario", "ABRIR ETAPA " + atual.id + " →");
+      b.onclick = function () { abrirArquivo(atual.arquivo, atual); };
+      acoes.appendChild(b);
+    }
+
+    var barras = [];
+    var cont = document.getElementById("versoes");
+    var abertas = {};
+    cont.querySelectorAll("details").forEach(function (d) { abertas[d.getAttribute("data-id")] = d.open; });
+    cont.innerHTML = "";
+    P.versoes.forEach(function (v) {
+      var pct = progresso(v.etapas);
+      var feitas = v.etapas.filter(function (e) { return status(e) === "feito"; }).length;
+      var temAtual = atual && v.etapas.indexOf(atual) >= 0;
+
+      var det = el("details", "versao" + (temAtual ? " atual" : ""));
+      det.setAttribute("data-id", v.id);
+      det.open = (v.id in abertas) ? abertas[v.id] : (temAtual || (pct > 0 && pct < 100));
+      var sum = el("summary");
+      var cab = el("div", "cab");
+      var h2 = el("h2", null, v.nome.toUpperCase());
+      h2.appendChild(el("small", null, v.subtitulo));
+      cab.appendChild(h2);
+      cab.appendChild(el("span", "num", feitas + "/" + v.etapas.length + " · " + pct + "%"));
+      sum.appendChild(cab);
+      var b2 = el("div", "barra fina"); var s = el("span"); b2.appendChild(s); sum.appendChild(b2);
+      barras.push([s, pct]);
+      det.appendChild(sum);
+
+      var ul = el("ul", "etapas");
+      v.etapas.forEach(function (e) {
+        var st = status(e);
+        var tem = e.arquivo && MD[e.arquivo];
+        var li = el("li", st + (atual === e ? " atual" : "") + (tem ? "" : " sem-arquivo"));
+        li.appendChild(el("span", "ic", ICONE[st]));
+        li.appendChild(el("span", "id", e.id));
+        li.appendChild(el("span", "nome", e.nome));
+        li.appendChild(el("span", "dias", e.dias ? "~" + e.dias + (e.dias === 1 ? " dia" : " dias") : "—"));
+        li.appendChild(el("span", "seta", tem ? "›" : ""));
+        if (tem) li.onclick = function () { abrirArquivo(e.arquivo, e); };
+        ul.appendChild(li);
+      });
+      det.appendChild(ul);
+      cont.appendChild(det);
+    });
+
+    var g = progresso(todas);
+    var feitasG = todas.filter(function (e) { return status(e) === "feito"; }).length;
+    document.getElementById("geralPct").textContent = g + "%";
+    document.getElementById("geralTexto").textContent = feitasG + " de " + todas.length + " etapas concluídas";
+    barras.push([document.getElementById("geralBarra"), g]);
+    requestAnimationFrame(function () { setTimeout(function () { barras.forEach(function (x) { x[0].style.width = x[1] + "%"; }); }, 60); });
+  }
+
+  var di = document.getElementById("diario");
+  (P.diario || []).forEach(function (d) {
+    var li = el("li"); li.appendChild(el("span", "data", d.data)); li.appendChild(document.createTextNode(d.texto)); di.appendChild(li);
+  });
+  montarPainel();
+})();
+</script>
+</body>
+</html>
