@@ -76,3 +76,12 @@ main#tela { padding: calc(var(--alt-topo) + 16px) 16px calc(var(--alt-menu) + 24
 .faixa-teste { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 20px; line-height: 20px; text-align: center; background: #FFD400; color: #0A0A12; font-family: var(--fonte-titulo); font-size: 0.7rem; letter-spacing: 2px; }
 body.modo-teste .topo { top: 20px; }
 body.modo-teste main#tela { padding-top: calc(var(--alt-topo) + 36px); }
+
+/* Ajustes e formulários */
+.linha-ajuste { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.linha-ajuste strong { color: var(--azul); font-weight: 700; }
+.grupo-botoes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.grupo-botoes .botao { flex: 1; }
+.zona-perigo { border-color: #FF3B5C66; }
+.subtitulo { margin: 0 0 10px; font-family: var(--fonte-titulo); font-weight: 400; font-size: 0.9rem; color: var(--perigo); }
+.campo { width: 100%; min-height: 48px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--azul); background: var(--fundo); color: var(--texto); font: inherit; font-size: 1.1rem; }

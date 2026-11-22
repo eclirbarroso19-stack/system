@@ -1,6 +1,7 @@
 // Inicia o app: rotas por hash, menu e service worker.
 import { montarNovaVersao } from "./atualizacao.js";
 
+import { aoAbrir } from "./abertura.js";
 import { emModoTeste } from "./nucleo/db.js";
 
 const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes"];
@@ -40,9 +41,7 @@ if (emModoTeste()) {
 window.addEventListener("hashchange", mostrar);
 mostrar();
 
-if (navigator.storage && navigator.storage.persist) {
-  navigator.storage.persist().catch(() => {});
-}
+aoAbrir();
 
 if ("serviceWorker" in navigator) {
   montarNovaVersao();
