@@ -3,8 +3,8 @@
 // status: "feito" | "andamento" | "aberto"
 window.PAINEL = {
   atualizadoEm: "22/11/2026",
-  etapaAtual: "1.2",
-  proximoPasso: "Eclir: testar o checklist da 1.2 (backup fora da pasta system). Depois, etapa 1.3.",
+  etapaAtual: "1.3",
+  proximoPasso: "Eclir: testar o checklist da 1.3 (com ?teste=1). Depois, etapa 1.4.",
   versoes: [
     {
       id: "0", nome: "Etapa 0", subtitulo: "Preparação",
@@ -20,7 +20,7 @@ window.PAINEL = {
       etapas: [
         { id: "1.1", nome: "Esqueleto do app", dias: 2, status: "feito", arquivo: "v1/1.1-esqueleto.md" },
         { id: "1.2", nome: "Memória do app + Backup", dias: 2, status: "feito", arquivo: "v1/1.2-memoria.md" },
-        { id: "1.3", nome: "Despertar Rápido + Status", dias: 3, status: "andamento", arquivo: "v1/1.3-despertar-status.md" },
+        { id: "1.3", nome: "Despertar Rápido + Status", dias: 3, status: "feito", arquivo: "v1/1.3-despertar-status.md" },
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "aberto", arquivo: "v1/1.4-missoes.md" },
         { id: "1.5", nome: "Registro do Ouro", dias: 2, status: "aberto", arquivo: "v1/1.5-registro-ouro.md" },
         { id: "1.6", nome: "Treino + Check-in + Ritual", dias: 3, status: "aberto", arquivo: "v1/1.6-treino-mente.md" },
@@ -88,6 +88,7 @@ window.PAINEL = {
     }
   ],
   diario: [
+    { data: "22/11/2026", texto: "Etapa 1.3 concluída: regras de XP, nível e rank; serviço do caçador; Despertar Rápido com resultado e radar; tela STATUS; refazer nos Ajustes; 26 testes. Antes, ajuste da 1.2: a data do backup agora vai dentro do arquivo e a mais recente é mantida ao restaurar. Versão do app 0.1.7." },
     { data: "22/11/2026", texto: "Etapa 1.2 concluída: banco IndexedDB (20 stores, modo ?teste=1), migrações, backup/restaurar/apagar tudo, lembrete da sexta, formato.js e 17 testes verdes. Antes, ajustes da 1.1: fonte Audiowide no lugar da Orbitron, cores do tests.html e id no manifesto. Versão do app 0.1.3." },
     { data: "22/11/2026", texto: "Etapa 1.1 concluída: bibliotecas, fontes e ícones locais; manifesto; CSS neon; casca com 6 rotas; ui.js; textos.js; service worker com aviso de nova versão; 8 testes verdes. Etapa 0.2 marcada como feita." },
     { data: "22/11/2026", texto: "Etapa 0.2 (parte do Claude Code): criados package.json, página de teste (index.html), js/nucleo/dia.js, testes (tests/testes.js, tests/rodar.mjs, tests.html) e primeiro commit. Sem push: falta o Eclir fazer o push e ligar o Pages." },
