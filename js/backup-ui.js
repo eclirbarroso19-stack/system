@@ -15,8 +15,9 @@ function baixarJson(objeto, nome) {
 }
 
 export async function fazerBackup() {
-  baixarJson(await criarBackup(), nomeArquivoBackup());
+  // Grava a data ANTES de gerar o arquivo, para ela ir dentro do backup.
   await registrarBackupFeito(diaDoJogo());
+  baixarJson(await criarBackup(), nomeArquivoBackup());
   toast(mensagens.backupFeito);
 }
 

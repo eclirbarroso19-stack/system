@@ -42,12 +42,24 @@ export async function registrarBackupFeito(dia) {
   await gravarMeta("ultimoBackup", dia);
 }
 
+// A data mais recente entre duas chaves "AAAA-MM-DD" (qualquer uma pode faltar).
+export function dataMaisRecente(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  return a >= b ? a : b;
+}
+
 // Valida, migra e substitui TUDO pelo conteúdo do backup. Lança erro se inválido.
+// Mantém a data de backup mais recente entre a do arquivo e a atual.
 export async function restaurarBackup(obj) {
   const v = validarBackup(obj);
   if (!v.ok) throw new Error(v.erro);
   const migrado = migrarDados(obj);
+  const atual = await lerMeta("ultimoBackup");
   await importarTudo(migrado.stores);
+  const doArquivo = (migrado.stores.meta.find((m) => m.chave === "ultimoBackup") || {}).valor;
+  const mais = dataMaisRecente(atual, doArquivo);
+  if (mais) await gravarMeta("ultimoBackup", mais);
 }
 
 // Pura: devo mostrar o lembrete de backup hoje?

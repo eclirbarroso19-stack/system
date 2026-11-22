@@ -1,6 +1,6 @@
 import { diaDoJogo, horasAteVirada } from "../js/nucleo/dia.js";
 import { formatarReais, lerReais, formatarData, nomeDiaSemana } from "../js/nucleo/formato.js";
-import { validarBackup, montarBackup, nomeArquivoBackup, deveLembrarBackup } from "../js/nucleo/backup.js";
+import { dataMaisRecente, validarBackup, montarBackup, nomeArquivoBackup, deveLembrarBackup } from "../js/nucleo/backup.js";
 import { migrarDados } from "../js/nucleo/migracoes.js";
 import { NOMES_STORES } from "../js/nucleo/db.js";
 import { diasEntre } from "../js/nucleo/dia.js";
@@ -108,5 +108,15 @@ testes.push(
     igual(deveLembrarBackup({ dia: "2026-11-27", ultimoBackup: "2026-11-21" }), false);    // 6 dias
     igual(deveLembrarBackup({ dia: "2026-11-27", ultimoBackup: "2026-11-01", ultimoLembrete: "2026-11-27" }), false);
     igual(deveLembrarBackup({ dia: "2026-11-26", ultimoBackup: undefined }), false);       // quinta
+  } },
+);
+
+testes.push(
+  { nome: "backup: mantém a data de backup mais recente ao restaurar", rodar() {
+    igual(dataMaisRecente("2026-11-20", "2026-11-25"), "2026-11-25");
+    igual(dataMaisRecente("2026-11-25", "2026-11-20"), "2026-11-25");
+    igual(dataMaisRecente(undefined, "2026-11-20"), "2026-11-20");
+    igual(dataMaisRecente("2026-11-20", undefined), "2026-11-20");
+    igual(dataMaisRecente(undefined, undefined), undefined);
   } },
 );
