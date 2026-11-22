@@ -85,3 +85,15 @@ body.modo-teste main#tela { padding-top: calc(var(--alt-topo) + 36px); }
 .zona-perigo { border-color: #FF3B5C66; }
 .subtitulo { margin: 0 0 10px; font-family: var(--fonte-titulo); font-weight: 400; font-size: 0.9rem; color: var(--perigo); }
 .campo { width: 100%; min-height: 48px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--azul); background: var(--fundo); color: var(--texto); font: inherit; font-size: 1.1rem; }
+
+/* Despertar */
+body.sem-menu .menu-inferior, body.sem-menu #engrenagem { display: none; }
+body.sem-menu main#tela { padding-bottom: 32px; }
+.progresso { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.progresso .barra { flex: 1; }
+.pergunta-area { font-family: var(--fonte-titulo); font-weight: 400; font-size: 1rem; color: var(--azul); margin: 0 0 8px; }
+.pergunta { font-size: 1.25rem; margin: 0 0 16px; }
+.opcoes { display: flex; flex-direction: column; gap: 10px; }
+.opcao { width: 100%; text-align: left; min-height: 56px; padding: 8px 14px; font-family: var(--fonte-texto); font-weight: 700; font-size: 1.05rem; letter-spacing: 0; text-transform: none; border-color: #2a2a44; }
+.revelacao, .final { margin-top: 12px; }
+.radar { max-width: 360px; margin: 8px auto 16px; }

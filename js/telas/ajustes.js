@@ -40,6 +40,11 @@ export async function montar(elemento) {
     ]),
   ]);
 
+  const despertar = el("div", { class: "cartao" }, [
+    botao("Refazer Despertar Rápido", "fantasma", () => { location.hash = "#despertar/refazer"; }),
+    el("p", { class: "aviso", texto: "Atualiza só os ranks provisórios. Não mexe em XP, HP nem Cristais." }),
+  ]);
+
   const perigo = el("div", { class: "cartao zona-perigo" }, [
     el("h2", { class: "subtitulo", texto: "ZONA DE PERIGO" }),
     botao("Apagar tudo", "perigo", pedirApagarTudo),
@@ -49,6 +54,7 @@ export async function montar(elemento) {
     el("h1", { class: "titulo-tela", texto: "AJUSTES" }),
     memoria,
     el("p", { class: "aviso", texto: avisos.geral + "." }),
+    despertar,
     el("div", { class: "cartao" }, [linha("Versão do app", VERSAO_APP), linha("Versão dos dados", String(VERSAO_DADOS))]),
     perigo,
   );

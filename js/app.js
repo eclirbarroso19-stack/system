@@ -1,28 +1,40 @@
 // Inicia o app: rotas por hash, menu e service worker.
 import { montarNovaVersao } from "./atualizacao.js";
-
 import { aoAbrir } from "./abertura.js";
 import { emModoTeste } from "./nucleo/db.js";
+import { lerCacador } from "./nucleo/cacador.js";
 
-const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes"];
+const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes", "despertar"];
 const PADRAO = "missoes";
 const tela = document.getElementById("tela");
 
+// "#despertar/refazer" -> { rota: "despertar", arg: "refazer" }
 function rotaAtual() {
-  const r = location.hash.replace("#", "");
-  return ROTAS.includes(r) ? r : PADRAO;
+  const [r, arg] = location.hash.replace("#", "").split("/");
+  return { rota: ROTAS.includes(r) ? r : PADRAO, arg };
 }
 
 async function mostrar() {
-  const rota = rotaAtual();
-  document.querySelectorAll("[data-rota]").forEach((a) => a.classList.toggle("ativo", a.dataset.rota === rota));
-  document.getElementById("engrenagem").classList.toggle("ativo", rota === "ajustes");
+  let { rota, arg } = rotaAtual();
   try {
+    // Sem caçador: o app abre sempre no Despertar, com o menu escondido.
+    const existe = !!(await lerCacador());
+    if (!existe) {
+      rota = "despertar";
+      arg = undefined;
+    } else if (rota === "despertar" && arg !== "refazer") {
+      rota = PADRAO;
+    }
+    document.body.classList.toggle("sem-menu", rota === "despertar");
+
+    document.querySelectorAll("[data-rota]").forEach((a) => a.classList.toggle("ativo", a.dataset.rota === rota));
+    document.getElementById("engrenagem").classList.toggle("ativo", rota === "ajustes");
+
     const modulo = await import(`./telas/${rota}.js`);
     tela.style.animation = "none";
     void tela.offsetWidth; // reinicia a animação de entrada
     tela.style.animation = "";
-    await modulo.montar(tela);
+    await modulo.montar(tela, arg);
     window.scrollTo(0, 0);
   } catch (erro) {
     console.error(erro);
@@ -40,7 +52,6 @@ if (emModoTeste()) {
 
 window.addEventListener("hashchange", mostrar);
 mostrar();
-
 aoAbrir();
 
 if ("serviceWorker" in navigator) {
