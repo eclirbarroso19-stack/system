@@ -61,3 +61,33 @@ export function radar(notas) {
   }).catch((e) => { console.error(e); caixa.textContent = "[RADAR INDISPONÍVEL]"; });
   return caixa;
 }
+
+// Linha de humor dos últimos dias. pontos: [{dia: "AAAA-MM-DD", humor: 1-5 ou null}].
+// Privacidade: nada de console aqui.
+export function graficoHumor(pontos) {
+  const caixa = el("div", { class: "grafico-humor" });
+  const canvas = el("canvas", { "aria-label": "Humor dos últimos 7 dias" });
+  caixa.append(canvas);
+  carregarChart().then(() => {
+    const css = getComputedStyle(document.documentElement);
+    const azul = css.getPropertyValue("--azul").trim() || "#00D4FF";
+    const texto2 = css.getPropertyValue("--texto2").trim() || "#8A9BB0";
+    new window.Chart(canvas, {
+      type: "line",
+      data: {
+        labels: pontos.map((p) => p.dia.slice(8) + "/" + p.dia.slice(5, 7)),
+        datasets: [{ data: pontos.map((p) => p.humor), borderColor: azul, backgroundColor: azul, borderWidth: 2, pointRadius: 4, spanGaps: true, tension: 0.3 }],
+      },
+      options: {
+        responsive: true,
+        animation: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? false : { duration: 500 },
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          y: { min: 1, max: 5, ticks: { stepSize: 1, color: texto2 }, grid: { color: "#2a2a44" } },
+          x: { ticks: { color: texto2 }, grid: { display: false } },
+        },
+      },
+    });
+  }).catch(() => { caixa.textContent = "[GRÁFICO INDISPONÍVEL]"; });
+  return caixa;
+}

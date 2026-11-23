@@ -6,6 +6,7 @@ import {
   criarDiaVazio, diasParaAvaliar, processarDiaEncerrado, recompensaDaMissao,
   MISSOES_V1, MISSOES_ZONA, RECOMPENSAS, RAID_XP, raidTerminou, registrarRaidConcluido, resumoRaids,
 } from "./regras.js";
+import { faltouTreinoPlanejado } from "./treino.js";
 import { statusMissaoOuro, planoDoOuro, criarLancamento, aplicarEdicao } from "./ouro.js";
 
 let _rodando = null;
@@ -58,6 +59,18 @@ async function _abrirDia() {
     diaHoje.punicao = { ativa: true, feita: false };
     diaHoje.punicaoGerada = true;
     await salvar("dias", diaHoje);
+  }
+
+  // Faltou a um dia de treino planejado ontem? (avisa uma vez por dia)
+  const diaOntem = somarDias(hoje, -1);
+  if (ontem && (await lerMeta("ultimoAvisoTreino")) !== diaOntem) {
+    await gravarMeta("ultimoAvisoTreino", diaOntem);
+    const cac = await lerCacador();
+    const arriscado = cac.parq?.temRisco && !cac.parq?.liberadoMedico;
+    if (cac.parq?.respondido && !arriscado) {
+      const treinosOntem = (await listarPorDia("treinos", diaOntem)).filter((t) => !t.recuperacao);
+      if (faltouTreinoPlanejado(diaOntem, cac.diasTreino, treinosOntem, !!ontem.missoes.treino)) fila.push("faltouTreino");
+    }
   }
 
   if (fila.length) await gravarMeta("filaMensagens", [...((await lerMeta("filaMensagens")) || []), ...fila]);

@@ -1,6 +1,7 @@
 // Tela STATUS: ficha do caçador, radar, áreas e atributos.
 import { el, barra, letraRank } from "../ui.js";
 import { lerCacador } from "../nucleo/cacador.js";
+import { lerMP } from "../nucleo/saude.js";
 import { nivelDe, AREAS, areasMaisFracas, aplicarTetoDiagnostico } from "../nucleo/regras.js";
 import { perguntasDespertar } from "../textos.js";
 import { radar } from "../radar.js";
@@ -19,6 +20,7 @@ function linhaBarra(rotulo, valorTexto, barraEl) {
 
 export async function montar(elemento) {
   const c = await lerCacador();
+  const mp = await lerMP();
   if (!c) { elemento.textContent = ""; return; }
   const { nivel, xpNoNivel, xpParaProximo } = nivelDe(c.xpTotal);
 
@@ -33,7 +35,7 @@ export async function montar(elemento) {
     ]),
     linhaBarra("XP", `${xpNoNivel}/${xpParaProximo}`, barra(xpNoNivel, xpParaProximo, "xp")),
     linhaBarra("HP", `${c.hp}/100`, barra(c.hp, 100, "hp")),
-    linhaBarra("MP", "—", barra(0, 100, "mp")),
+    linhaBarra("MP", mp === null ? "—" : `${mp}/100`, barra(mp ?? 0, 100, "mp")),
     el("div", { class: "linha-ajuste" }, [el("span", { texto: "💎 Cristais de Mana" }), el("strong", { texto: String(c.cristais) })]),
     el("div", { class: "linha-ajuste" }, [el("span", { texto: "Pontos de Foco" }), el("strong", { texto: String(c.pontosFoco) })]),
     el("p", { class: "aviso", texto: "A distribuição dos Pontos de Foco chega numa versão futura." }),

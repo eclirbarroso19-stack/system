@@ -1,6 +1,8 @@
 import { el, botao, modal, toast } from "../ui.js";
 import { VERSAO_APP, VERSAO_DADOS } from "../config.js";
-import { avisos } from "../textos.js";
+import { avisos, checagemSeguranca } from "../textos.js";
+import { lerCacador } from "../nucleo/cacador.js";
+import { marcarLiberadoMedico, salvarParqVazio } from "../nucleo/saude.js";
 import { lerMeta, limparTudo, emModoTeste } from "../nucleo/db.js";
 import { avancarDiaTeste } from "../nucleo/dia.js";
 import { abrirDia } from "../nucleo/diario.js";
@@ -43,6 +45,17 @@ export async function montar(elemento) {
     ]),
   ]);
 
+  // Checagem de Segurança (PAR-Q): liberação médica e refazer
+  const cacador = await lerCacador();
+  const parq = cacador?.parq;
+  const seguranca = el("div", { class: "cartao" }, [
+    el("h2", { class: "subtitulo-azul", texto: "CHECAGEM DE SEGURANÇA" }),
+    el("p", { class: "desc", texto: !parq?.respondido ? "Ainda não respondida. Ela aparece na tela CORPO." : parq.temRisco ? (parq.liberadoMedico ? "Há risco, e você foi liberado pelo médico." : "Há risco: o treino vira caminhada leve até o médico liberar.") : "Corpo liberado para o treino." }),
+    ...(parq?.temRisco && !parq.liberadoMedico ? [botao(checagemSeguranca.liberadoMedico, "primario", async () => { await marcarLiberadoMedico(true); toast("Liberação registrada."); montar(elemento); })] : []),
+    ...(parq?.temRisco && parq.liberadoMedico ? [botao("Desfazer liberação", "fantasma", async () => { await marcarLiberadoMedico(false); montar(elemento); })] : []),
+    botao("Refazer Checagem", "fantasma", async () => { await salvarParqVazio(); location.hash = "#corpo"; window.dispatchEvent(new Event("hashchange")); }),
+  ]);
+
   const despertar = el("div", { class: "cartao" }, [
     botao("Refazer Despertar Rápido", "fantasma", () => { location.hash = "#despertar/refazer"; }),
     el("p", { class: "aviso", texto: "Atualiza só os ranks provisórios. Não mexe em XP, HP nem Cristais." }),
@@ -75,6 +88,7 @@ export async function montar(elemento) {
     el("h1", { class: "titulo-tela", texto: "AJUSTES" }),
     memoria,
     el("p", { class: "aviso", texto: avisos.geral + "." }),
+    seguranca,
     despertar,
     ...(teste ? [teste] : []),
     el("div", { class: "cartao" }, [linha("Versão do app", VERSAO_APP), linha("Versão dos dados", String(VERSAO_DADOS))]),

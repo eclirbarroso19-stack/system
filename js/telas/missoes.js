@@ -2,6 +2,7 @@
 import { el, botao, barra, mensagemSistema, toast, levelUp } from "../ui.js";
 import { lerCacador, lerDia } from "../nucleo/cacador.js";
 import { listarPorDia } from "../nucleo/db.js";
+import { registrarDescanso, lerMP } from "../nucleo/saude.js";
 import {
   abrirDia, consumirFila, primeiraAberturaDoDia, concluirMissao, desfazerConclusao,
   salvarPrincipalTexto, iniciarRaid, cancelarRaid, ouroCumprido, marcarSemGastos,
@@ -65,6 +66,7 @@ export async function montar(elemento) {
     }
     dia = await lerDia();
     cacador = await lerCacador(); // lê de novo: o Raid ou o Ouro acima podem ter pago XP
+    const mp = await lerMP();
     const temGasto = (await listarPorDia("ouro", dia.dia)).some((l) => l.tipo === "saida");
 
     const { nivel, xpNoNivel, xpParaProximo } = nivelDe(cacador.xpTotal);
@@ -93,7 +95,7 @@ export async function montar(elemento) {
       ]),
       barra(xpNoNivel, xpParaProximo, "xp"),
       el("div", { class: "resumo-topo" }, [el("span", { texto: `XP ${xpNoNivel}/${xpParaProximo}` }), el("span", { texto: `💎 ${cacador.cristais}` })]),
-      el("div", { class: "resumo-topo" }, [el("span", { texto: `HP ${cacador.hp}/100` })]),
+      el("div", { class: "resumo-topo" }, [el("span", { texto: `HP ${cacador.hp}/100` }), el("span", { texto: `MP ${mp === null ? "—" : mp}` })]),
       barra(cacador.hp, 100, "hp"),
     ]));
     if (zona) {
@@ -125,8 +127,8 @@ export async function montar(elemento) {
       if (m.id === "treino") {
         if (feita) extra.push(el("p", { class: "desc", texto: dia.recuperacao ? "Registrado: descanso planejado." : "Registrado: treino." }));
         else acoes.push(
-          botao("TREINEI", "primario", () => concluir("treino")),
-          botao("DESCANSO PLANEJADO", "fantasma", () => concluir("treino", { recuperacao: true })),
+          botao("IR PARA CORPO", "primario", () => { location.hash = "#corpo"; }),
+          botao("DESCANSO PLANEJADO", "fantasma", async () => { const r = await registrarDescanso(); if (r) await concluirResultado(r); else await desenhar(); }),
         );
       } else if (m.id === "agua") {
         if (!feita) acoes.push(botao("BEBI 2 L", "primario", () => concluir("agua")));
