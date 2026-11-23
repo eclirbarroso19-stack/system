@@ -65,7 +65,9 @@ main#tela { padding: calc(var(--alt-topo) + 16px) 16px calc(var(--alt-menu) + 24
 .modal h2 { margin: 0 0 10px; font-weight: 400; font-family: var(--fonte-titulo); font-size: 1rem; color: var(--azul); }
 .modal .botoes { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
 .toast { position: fixed; left: 12px; right: 12px; bottom: calc(var(--alt-menu) + 12px + env(safe-area-inset-bottom)); z-index: 40; display: flex; align-items: center; gap: 12px; background: var(--cartao); border: 1px solid var(--azul); border-radius: 10px; padding: 10px 14px; animation: fade 200ms; }
-.toast span { flex: 1; }
+.toast { flex-wrap: wrap; justify-content: flex-end; max-height: 60vh; overflow-y: auto; }
+.toast span { flex: 1 1 60%; min-width: 0; overflow-wrap: anywhere; }
+.toast.erro-sistema { border-color: var(--perigo); box-shadow: 0 0 14px #FF3B5C55; z-index: 60; }
 .toast .botao { min-height: 48px; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -153,12 +155,12 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .rotulo { color: var(--texto2); font-size: 1rem; margin: 4px 0 0; }
 .campo-valor { font-size: 2rem; min-height: 64px; text-align: center; }
 .valor-grande { font-family: var(--fonte-titulo); font-size: 1.6rem; color: var(--azul); text-align: center; margin: 0; }
-.grade-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grade-cat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .botao.cat { min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: var(--fonte-texto); font-weight: 700; font-size: 0.95rem; letter-spacing: 0; text-transform: none; border-color: #2a2a44; padding: 6px; }
 .emoji { font-size: 1.4rem; }
 .seletor-mes { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .seletor-mes .botao { min-width: 48px; padding: 0 12px; }
-.numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
+.numeros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center; }
 .num-rotulo { display: block; color: var(--texto2); font-family: var(--fonte-titulo); font-size: 0.65rem; letter-spacing: 1px; }
 .num strong { font-size: 1.05rem; font-weight: 700; }
 .num strong.negativo { color: var(--perigo); }
@@ -175,7 +177,7 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 
 /* ---- Corpo e Mente (etapa 1.6) ---- */
 .bolinhas { display: flex; gap: 6px; justify-content: space-between; }
-.bolinha { width: 44px; height: 48px; border-radius: 50%; border: 1px solid #2a2a44; background: var(--fundo); color: var(--texto2); font-family: var(--fonte-titulo); font-size: 0.9rem; cursor: pointer; }
+.bolinha { width: 48px; height: 48px; border-radius: 50%; border: 1px solid #2a2a44; background: var(--fundo); color: var(--texto2); font-family: var(--fonte-titulo); font-size: 0.9rem; cursor: pointer; }
 .bolinha.ligada { background: var(--grad); color: var(--texto); border-color: var(--azul); }
 .exercicio { display: block; width: 100%; min-height: 48px; margin-bottom: 8px; padding: 0 12px; text-align: left; background: var(--fundo); border: 1px solid #2a2a44; border-radius: 10px; color: var(--texto); font: inherit; font-weight: 700; cursor: pointer; }
 .exercicio.feito { border-color: var(--azul); color: var(--azul); }
@@ -185,13 +187,22 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .linha-hist { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #1d1d33; font-size: 0.95rem; }
 .linha-hist span:last-child { color: var(--texto2); text-align: right; }
 .cvv { position: fixed; right: 12px; bottom: calc(var(--alt-menu) + 12px + env(safe-area-inset-bottom)); z-index: 12; display: flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 24px; background: var(--perigo); color: #fff; font-family: var(--fonte-titulo); font-size: 0.75rem; letter-spacing: 1px; text-decoration: none; box-shadow: 0 0 14px #FF3B5C88; }
-.humores { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.humores { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .humor { min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: var(--fundo); border: 1px solid #2a2a44; border-radius: 10px; color: var(--texto); font: inherit; font-size: 0.7rem; cursor: pointer; }
 .humor .emoji { font-size: 1.6rem; }
 .humor.ligado { border-color: var(--azul); box-shadow: 0 0 8px #00D4FF66; }
-.emocoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.emocoes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .emocoes .botao { text-transform: none; font-family: var(--fonte-texto); font-weight: 700; letter-spacing: 0; font-size: 1rem; }
 .emocoes .botao.ligado { background: var(--grad); }
 .destaque-noite { border-color: var(--azul); box-shadow: 0 0 14px #00D4FF44; }
 .grafico-humor { max-width: 480px; margin: 8px auto; }
 .botao.ligado { box-shadow: 0 0 0 2px var(--azul); }
+
+/* Telas estreitas (320 px): nada estoura para o lado */
+.botao, .humor, .botao.cat { overflow-wrap: anywhere; }
+@media (max-width: 350px) {
+  main#tela { padding-left: 12px; padding-right: 12px; }
+  .botao { padding: 0 12px; font-size: 0.78rem; letter-spacing: 0.5px; }
+  .humor { font-size: 0.62rem; }
+  .menu-inferior a { font-size: 0.5rem; letter-spacing: 0; }
+}

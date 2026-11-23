@@ -6,6 +6,9 @@ import { lerCacador } from "./nucleo/cacador.js";
 import { abrirDia } from "./nucleo/diario.js";
 import { iniciarInstalacao } from "./instalacao.js";
 
+import { iniciarErros, mostrarErro } from "./erros.js";
+
+iniciarErros(); // erros globais viram [ERRO DO SISTEMA: ...]
 iniciarInstalacao(); // captura beforeinstallprompt cedo, antes de abrir Ajustes
 
 const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes", "despertar"];
@@ -41,8 +44,8 @@ async function mostrar() {
     await modulo.montar(tela, arg);
     window.scrollTo(0, 0);
   } catch (erro) {
-    console.error(erro);
     tela.textContent = "[ERRO AO CARREGAR A TELA]";
+    mostrarErro(erro, "tela " + rota);
   }
 }
 
