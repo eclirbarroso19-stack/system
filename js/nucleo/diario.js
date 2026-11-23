@@ -43,7 +43,8 @@ async function _abrirDia() {
       reg.resultado = r.resultado;
       await salvar("dias", reg);
       for (const ev of r.eventos) await adicionar("eventos", { dia: d, quando: agora().getTime(), xp: 0, ...ev });
-      fila.push(...r.mensagens);
+      // a penalidade vai com o total real (HP e Cristais) para a mensagem
+      fila.push(...r.mensagens.map((m) => (m === "penalidade" ? { chave: m, ...r.penalidade } : m)));
       carregaPunicao = r.resultado.gerarPunicao;
     }
     await salvar("cacador", cacador);

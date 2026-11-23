@@ -1,6 +1,6 @@
 // Service worker do SYSTEM: cache-first, versionado.
 // VERSAO_APP deve ser igual à de js/config.js (um teste confere).
-const VERSAO_APP = "0.1.16";
+const VERSAO_APP = "0.1.17";
 const CACHE = `system-v${VERSAO_APP}`;
 
 const ARQUIVOS = [

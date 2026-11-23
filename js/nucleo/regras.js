@@ -280,7 +280,10 @@ export function processarDiaEncerrado(cacador, registroDia) {
   c = z.cacador;
   if (z.saiuDaZona) mensagens.push("saiuDaZona");
 
-  return { cacador: c, resultado: { ...a, zona: zonaNoDia }, eventos, mensagens };
+  // total real da penalidade do dia (inclui a Punição não feita e só os Cristais que de fato saíram)
+  const penalidade = { hp: Math.abs(Math.min(0, a.deltaHP + p.deltaHP)), cristais: Math.abs(Math.min(0, c.cristais - antesCristais)) };
+
+  return { cacador: c, resultado: { ...a, zona: zonaNoDia }, eventos, mensagens, penalidade };
 }
 
 // Dias encerrados que faltam avaliar: depois de ultimoDiaAvaliado e antes de hoje, no máximo os 7 últimos.

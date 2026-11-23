@@ -11,7 +11,7 @@ import {
 import { MISSOES_V1, MISSOES_ZONA, nivelDe, missoesPendentes, resumoRaids } from "../nucleo/regras.js";
 import { diaDoJogo, horasAteVirada, noiteDoDia, agora } from "../nucleo/dia.js";
 import { formatarData, nomeDiaSemana } from "../nucleo/formato.js";
-import { mensagens, preencher, msgMissaoConcluida } from "../textos.js";
+import { mensagens, preencher, msgMissaoConcluida, msgPenalidade } from "../textos.js";
 
 const ICONES = { treino: "⚔️", agua: "💧", principal: "🎯", ouro: "💰", sono: "🌙", caminhada10: "🚶" };
 
@@ -32,7 +32,7 @@ export async function montar(elemento) {
   // Fila de mensagens do Sistema (uma de cada vez, com OK).
   const fila = [];
   if (await primeiraAberturaDoDia()) fila.push(mensagens.missaoDisponivel);
-  for (const chave of await consumirFila()) fila.push(mensagens[chave]);
+  for (const chave of await consumirFila()) fila.push(typeof chave === "string" ? mensagens[chave] : msgPenalidade(chave.hp, chave.cristais));
 
   let ultimaMsg = null; // resultado da última ação (mensagem no topo)
 

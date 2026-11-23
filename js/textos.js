@@ -128,6 +128,13 @@ export const categoriasEntrada = [
   { id: "outros", emoji: "🎁", nome: "Outros", exemplos: "" },
 ];
 
+// "[PENALIDADE: −20 HP · −10 CRISTAIS. MISSÃO DE PUNIÇÃO LIBERADA.]" com o total real do dia.
+export function msgPenalidade(hp, cristais) {
+  if (hp === 10 && !cristais) return mensagens.penalidade;
+  const c = cristais ? ` · −${cristais} ${cristais === 1 ? "CRISTAL" : "CRISTAIS"}` : "";
+  return `[PENALIDADE: −${hp} HP${c}. MISSÃO DE PUNIÇÃO LIBERADA.]`;
+}
+
 // "[MISSÃO CONCLUÍDA: +10 XP · +1 CRISTAL]" com os valores reais (a Zona pode reduzir o XP).
 export function msgMissaoConcluida(xp, cristais) {
   if (xp === 10 && cristais === 1) return mensagens.missaoConcluida;

@@ -11,7 +11,7 @@ import { dataMaisRecente, validarBackup, montarBackup, nomeArquivoBackup, deveLe
 import { migrarDados } from "../js/nucleo/migracoes.js";
 import { NOMES_STORES } from "../js/nucleo/db.js";
 import { diasEntre } from "../js/nucleo/dia.js";
-import { preencher, mensagens, perguntasDespertar, categoriasSaida } from "../js/textos.js";
+import { preencher, mensagens, msgPenalidade, perguntasDespertar, categoriasSaida } from "../js/textos.js";
 
 function igual(real, esperado) {
   if (real !== esperado) throw new Error(`esperado ${esperado}, veio ${real}`);
@@ -231,6 +231,18 @@ testes.push(
     igual(r.cacador.hp, 95); // +5 -10
     igual(r.cacador.xpTotal, 500);
     igual(r.eventos.find((e) => e.tipo === "punicao-nao-feita").cristais, -4);
+  } },
+  { nome: "mensagem de penalidade mostra o total real (falha + Punição não feita)", rodar() {
+    // dia ruim (-10) com Punição não feita (-10 HP, -10 Cristais)
+    const r = processarDiaEncerrado(cac(80, { cristais: 30 }), diaCom(1, { punicao: { ativa: true, feita: false } }));
+    igual(r.penalidade.hp, 20); igual(r.penalidade.cristais, 10);
+    igual(msgPenalidade(r.penalidade.hp, r.penalidade.cristais), "[PENALIDADE: −20 HP · −10 CRISTAIS. MISSÃO DE PUNIÇÃO LIBERADA.]");
+    // só dia ruim: texto original
+    const s = processarDiaEncerrado(cac(80), diaCom(1));
+    igual(msgPenalidade(s.penalidade.hp, s.penalidade.cristais), mensagens.penalidade);
+    // Cristais insuficientes: mostra só o que saiu de verdade
+    const t = processarDiaEncerrado(cac(80, { cristais: 4 }), diaCom(1, { punicao: { ativa: true, feita: false } }));
+    igual(msgPenalidade(t.penalidade.hp, t.penalidade.cristais), "[PENALIDADE: −20 HP · −4 CRISTAIS. MISSÃO DE PUNIÇÃO LIBERADA.]");
   } },
   { nome: "HP 10 com falha vai a 0 e entra na Zona", rodar() {
     const r = processarDiaEncerrado(cac(10), diaCom(1));
