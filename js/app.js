@@ -4,6 +4,9 @@ import { aoAbrir } from "./abertura.js";
 import { emModoTeste } from "./nucleo/db.js";
 import { lerCacador } from "./nucleo/cacador.js";
 import { abrirDia } from "./nucleo/diario.js";
+import { iniciarInstalacao } from "./instalacao.js";
+
+iniciarInstalacao(); // captura beforeinstallprompt cedo, antes de abrir Ajustes
 
 const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes", "despertar"];
 const PADRAO = "missoes";

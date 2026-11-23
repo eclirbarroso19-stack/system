@@ -24,7 +24,7 @@ window.PAINEL = {
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "feito", arquivo: "v1/1.4-missoes.md" },
         { id: "1.5", nome: "Registro do Ouro", dias: 2, status: "feito", arquivo: "v1/1.5-registro-ouro.md" },
         { id: "1.6", nome: "Treino + Check-in + Ritual", dias: 3, status: "feito", arquivo: "v1/1.6-treino-mente.md" },
-        { id: "1.7", nome: "Instalar e fechar a v1", dias: 2, status: "aberto", arquivo: "v1/1.7-publicar.md" },
+        { id: "1.7", nome: "Instalar e fechar a v1", dias: 2, status: "andamento", arquivo: "v1/1.7-publicar.md" },
         { id: "1.8", nome: "Uso real e ajustes", dias: 5, status: "aberto", arquivo: "v1/B-modelo-conserto.md" }
       ]
     },

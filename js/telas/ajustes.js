@@ -9,6 +9,7 @@ import { abrirDia } from "../nucleo/diario.js";
 import { gerarDadosFicticios } from "../nucleo/ficticios.js";
 import { formatarData } from "../nucleo/formato.js";
 import { fazerBackup, escolherEPedirRestauracao } from "../backup-ui.js";
+import { jaInstalado, podeInstalar, instalar, aoMudarInstalacao } from "../instalacao.js";
 
 function linha(rotulo, valor) {
   return el("div", { class: "linha-ajuste" }, [el("span", { texto: rotulo }), el("strong", { texto: valor })]);
@@ -44,6 +45,22 @@ export async function montar(elemento) {
       botao("Restaurar", "fantasma", () => escolherEPedirRestauracao(() => location.reload())),
     ]),
   ]);
+
+  // Instalação como app: botão quando o Chrome permite; "App instalado ✓" quando já está instalado.
+  const instalacao = el("div", { class: "cartao" });
+  function desenharInstalacao() {
+    if (!instalacao.isConnected && instalacao.dataset.pronto) { desligar(); return; }
+    instalacao.dataset.pronto = "1";
+    if (jaInstalado()) {
+      instalacao.replaceChildren(linha("App", "App instalado ✓"));
+    } else if (podeInstalar()) {
+      instalacao.replaceChildren(botao("INSTALAR O SYSTEM", "primario", async () => { await instalar(); montar(elemento); }));
+    } else {
+      instalacao.replaceChildren(el("p", { class: "desc", texto: "Para instalar: menu ⋮ do Chrome → Instalar app (ou Adicionar à tela inicial)." }));
+    }
+  }
+  const desligar = aoMudarInstalacao(desenharInstalacao);
+  desenharInstalacao();
 
   // Checagem de Segurança (PAR-Q): liberação médica e refazer
   const cacador = await lerCacador();
@@ -87,6 +104,7 @@ export async function montar(elemento) {
   elemento.replaceChildren(
     el("h1", { class: "titulo-tela", texto: "AJUSTES" }),
     memoria,
+    instalacao,
     el("p", { class: "aviso", texto: avisos.geral + "." }),
     seguranca,
     despertar,

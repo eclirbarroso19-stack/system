@@ -46,7 +46,7 @@
 | ✅ | 1.4 | Missões diárias | 3 | `v1/1.4-missoes.md` |
 | ✅ | 1.5 | Registro do Ouro | 2 | `v1/1.5-registro-ouro.md` |
 | ✅ | 1.6 | Treino + Check-in + Ritual | 3 | `v1/1.6-treino-mente.md` |
-| ⬜ | 1.7 | Instalar e fechar a v1 | 2 | `v1/1.7-publicar.md` |
+| 🔄 | 1.7 | Instalar e fechar a v1 | 2 | `v1/1.7-publicar.md` |
 | ⬜ | 1.8 | Uso real e ajustes (5 dias) | 5 | `v1/B-modelo-conserto.md` |
 
 ### Sub-passos da etapa em andamento
