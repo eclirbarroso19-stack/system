@@ -48,6 +48,23 @@ export const testes = [
     const faltam = lista.filter((f) => !fs.existsSync(new URL("../" + f, import.meta.url)));
     if (faltam.length) throw new Error("faltam: " + faltam.join(", "));
   } },
+  { nome: "todo arquivo do app (js, css, fontes, ícones) está no cache do sw.js", async rodar() {
+    if (!noNode) return;
+    const fs = await import("node:fs");
+    const raiz = new URL("../", import.meta.url);
+    const src = fs.readFileSync(new URL("sw.js", raiz), "utf8");
+    const lista = new Set([...src.matchAll(/^\s*"\.\/([^"]+)",?$/gm)].map((m) => m[1]));
+    const achados = [];
+    const varrer = (pasta) => {
+      for (const e of fs.readdirSync(new URL(pasta, raiz), { withFileTypes: true })) {
+        if (e.isDirectory()) varrer(pasta + e.name + "/");
+        else if (/\.(js|css|woff2|png)$/.test(e.name)) achados.push(pasta + e.name);
+      }
+    };
+    for (const p of ["js/", "css/", "fontes/", "icones/", "lib/"]) varrer(p);
+    const faltam = achados.filter((f) => !lista.has(f));
+    if (faltam.length) throw new Error("fora do cache: " + faltam.join(", "));
+  } },
 ];
 
 const backupOk = () => montarBackup(Object.fromEntries(NOMES_STORES.map((n) => [n, []])));
