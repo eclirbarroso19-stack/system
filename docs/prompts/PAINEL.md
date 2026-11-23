@@ -5,8 +5,8 @@
 > Status: ✅ concluído · 🔄 em andamento · ⬜ aberto
 
 **Atualizado em:** 23/11/2026
-**Etapa atual:** 1.5 (concluída; aguardando teste do Eclir)
-**Próximo passo:** Eclir testar o checklist da 1.5 (tela OURO). Depois, etapa 1.6.
+**Etapa atual:** 1.6 (concluída; aguardando teste do Eclir)
+**Próximo passo:** Eclir testar o checklist da 1.6 (CORPO e MENTE). Depois, etapa 1.7.
 
 ---
 
@@ -15,13 +15,13 @@
 | Versão | Etapas | Progresso |
 |---|---|---|
 | Etapa 0: Preparação | 4/4 | ██████████ 100% |
-| v1: Primeiro SYSTEM no celular | 5/8 | ██████░░░░ 62% |
+| v1: Primeiro SYSTEM no celular | 6/8 | ███████░░░ 75% |
 | v2: Diagnóstico + Dinheiro | 0/7 | ░░░░░░░░░░ 0% |
 | v3: Corpo + Gestão | 0/7 | ░░░░░░░░░░ 0% |
 | v4: Mente + Sombras + Relacionamentos | 0/6 | ░░░░░░░░░░ 0% |
 | v5: Profissional + Espiritualidade + Progressão | 0/7 | ░░░░░░░░░░ 0% |
 | v6: Portais Ocultos + Arte e Som | 0/6 | ░░░░░░░░░░ 0% |
-| **Geral** | **9/45** | **██░░░░░░░░ 20%** |
+| **Geral** | **10/45** | **██░░░░░░░░ 22%** |
 
 > O progresso é pesado pelos dias de cada etapa (🔄 conta metade). O painel visual (`painel.html`) calcula sozinho.
 
@@ -45,7 +45,7 @@
 | ✅ | 1.3 | Despertar Rápido + Status | 3 | `v1/1.3-despertar-status.md` |
 | ✅ | 1.4 | Missões diárias | 3 | `v1/1.4-missoes.md` |
 | ✅ | 1.5 | Registro do Ouro | 2 | `v1/1.5-registro-ouro.md` |
-| ⬜ | 1.6 | Treino + Check-in + Ritual | 3 | `v1/1.6-treino-mente.md` |
+| ✅ | 1.6 | Treino + Check-in + Ritual | 3 | `v1/1.6-treino-mente.md` |
 | ⬜ | 1.7 | Instalar e fechar a v1 | 2 | `v1/1.7-publicar.md` |
 | ⬜ | 1.8 | Uso real e ajustes (5 dias) | 5 | `v1/B-modelo-conserto.md` |
 
@@ -69,6 +69,7 @@ Os nomes das etapas estão em `painel-dados.js` e os esboços em `v2/` … `v6/e
 
 | Data | O que aconteceu |
 |---|---|
+| 23/11/2026 | Etapa 1.6 concluída: treino.js (MP, Fadiga, treino do dia, PAR-Q), saude.js (dados de Corpo e Mente), tela CORPO (Checagem de Segurança, dias de treino, treino do dia, descanso, histórico, Fadiga), tela MENTE (check-in, Ritual da Noite, gráfico de 7 dias, CVV 188), MP no STATUS e em MISSÕES, aviso de treino faltado; 69 testes. Antes, ajustes da 1.5: XP do Raid no topo, botão do Ouro some com gasto, mês com maiúscula, botões lado a lado, teto do diagnóstico (nota máx. 74 no Despertar Rápido), edição não muda dia nem hora. Decisões: lista vazia de dias de treino = padrão seg/qua/sex; registrar treino num dia que já teve descanso não paga de novo; ritual da noite só pergunta do sono se a missão 5 ainda não foi marcada; Fadiga só calcula com um treino de 28 dias ou mais atrás. |
 | 23/11/2026 | Etapa 1.5 concluída: ouro.js (regras puras: resumo, missão 4, meses), tela OURO (+ GASTO / + ENTRADA, lista do dia, editar/apagar, resumo do mês, aviso de finanças) e missão 4 ligada aos registros; 56 testes. Antes, ajuste da 1.4: o Raid de Foco não conclui mais a Missão Principal (+5 XP por raid, só os 4 primeiros do dia, cancelar não dá XP, lista de raids no dia). Decisão: o Ouro paga no máximo +10 XP +1 Cristal por dia; com impulso a missão 4 não conta, mas o registro ainda paga; impulso depois da missão paga só desmarca, sem estorno. Raid além do 4º mostra mensagem sem XP. |
 | 22/11/2026 | Painel melhorado: etapas abrem formatadas no painel, com COPIAR, checklist marcável e TESTEI E ESTÁ OK (o progresso é marcado só pelo Claude Code). Novo `gerar-painel.mjs` gera o `etapas-dados.js`. |
 | 23/11/2026 | Etapa 1.4 concluída: regras do dia e da Zona (avaliarDia, punição, processarDiaEncerrado), diario.js (avaliação ao abrir, missões, desfazer), tela MISSÕES com Raid de Foco, punição, level up e alerta das 21h, modo de teste com AVANÇAR 1 DIA e dados fictícios. 39 testes. Antes: ajustes da 1.3 (cores dos ranks por função única, marca ⚠ MAIS FRACA, selo sem quebra de linha). Decisões: TREINEI dá 30 XP + 3 Cristais (Livro 3.1, treino concluído); as outras missões dão 10 XP + 1; o alerta das 21h vale também de 0h às 4h (o dia do jogo ainda não virou); mensagens da fila (penalidade, HP crítico) aparecem uma por vez com botão OK. |

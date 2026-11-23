@@ -3,8 +3,8 @@
 // status: "feito" | "andamento" | "aberto"
 window.PAINEL = {
   atualizadoEm: "23/11/2026",
-  etapaAtual: "1.5",
-  proximoPasso: "Eclir: testar o checklist da 1.5 (tela OURO). Depois, etapa 1.6.",
+  etapaAtual: "1.6",
+  proximoPasso: "Eclir: testar o checklist da 1.6 (CORPO e MENTE). Depois, etapa 1.7.",
   versoes: [
     {
       id: "0", nome: "Etapa 0", subtitulo: "Preparação",
@@ -23,7 +23,7 @@ window.PAINEL = {
         { id: "1.3", nome: "Despertar Rápido + Status", dias: 3, status: "feito", arquivo: "v1/1.3-despertar-status.md" },
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "feito", arquivo: "v1/1.4-missoes.md" },
         { id: "1.5", nome: "Registro do Ouro", dias: 2, status: "feito", arquivo: "v1/1.5-registro-ouro.md" },
-        { id: "1.6", nome: "Treino + Check-in + Ritual", dias: 3, status: "aberto", arquivo: "v1/1.6-treino-mente.md" },
+        { id: "1.6", nome: "Treino + Check-in + Ritual", dias: 3, status: "feito", arquivo: "v1/1.6-treino-mente.md" },
         { id: "1.7", nome: "Instalar e fechar a v1", dias: 2, status: "aberto", arquivo: "v1/1.7-publicar.md" },
         { id: "1.8", nome: "Uso real e ajustes", dias: 5, status: "aberto", arquivo: "v1/B-modelo-conserto.md" }
       ]
@@ -88,6 +88,7 @@ window.PAINEL = {
     }
   ],
   diario: [
+{ data: "23/11/2026", texto: "Etapa 1.6 concluída: regras de MP, Fadiga e treino do dia; telas CORPO (Checagem de Segurança, treino, descanso, histórico) e MENTE (check-in, Ritual da Noite, CVV 188); MP no STATUS e em MISSÕES; 69 testes. Antes, ajustes da 1.5 (teto do diagnóstico 74, botões, mês, XP do Raid). Decisões: dias de treino vazios = seg/qua/sex; Fadiga só com 28 dias de histórico; o ritual só pergunta do sono se a missão 5 ainda está aberta." },
     { data: "23/11/2026", texto: "Etapa 1.5 concluída: regras puras do Ouro, tela OURO com registro rápido, lista do dia, editar/apagar e resumo do mês; missão 4 ligada aos registros; 56 testes. Antes, ajuste da 1.4: Raid de Foco não conclui a Missão Principal (+5 XP, só os 4 primeiros do dia). Decisão: o Ouro paga no máximo +10 XP +1 Cristal por dia; com impulso a missão 4 não conta mas o registro paga; sem estorno." },
     { data: "23/11/2026", texto: "Etapa 1.4 concluída: regras do dia e da Zona; avaliação dos dias ao abrir; tela MISSÕES com Raid de Foco, punição, level up e alerta das 21h; modo de teste com AVANÇAR 1 DIA e dados fictícios; 39 testes. Antes, ajustes da 1.3: cores dos ranks, marca MAIS FRACA e selo sem quebra de linha. Decisões: TREINEI dá 30 XP e 3 Cristais; o alerta das 21h vale também de 0h às 4h." },
     { data: "22/11/2026", texto: "Etapa 1.3 concluída: regras de XP, nível e rank; serviço do caçador; Despertar Rápido com resultado e radar; tela STATUS; refazer nos Ajustes; 26 testes. Antes, ajuste da 1.2: a data do backup agora vai dentro do arquivo e a mais recente é mantida ao restaurar. Versão do app 0.1.7." },
