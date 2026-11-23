@@ -104,3 +104,16 @@ export function mensagemComRank(texto, rank) {
   });
   return caixa;
 }
+
+// Tela cheia de LEVEL UP: número crescendo, brilho e vibração.
+export function levelUp(nivel, texto) {
+  const fundo = el("div", { class: "levelup", role: "alertdialog" }, [
+    el("div", { class: "levelup-numero", texto: String(nivel) }),
+    el("div", { class: "msg-sistema", texto }),
+  ]);
+  const fechar = () => fundo.remove();
+  fundo.append(botao("CONTINUAR", "primario", fechar));
+  document.body.append(fundo);
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  return { fechar };
+}

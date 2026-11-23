@@ -124,3 +124,10 @@ export const categoriasEntrada = [
   { id: "beneficios", emoji: "🏛️", nome: "Benefícios", exemplos: "Bolsa Família, Pé-de-Meia etc." },
   { id: "outros", emoji: "🎁", nome: "Outros", exemplos: "" },
 ];
+
+// "[MISSÃO CONCLUÍDA: +10 XP · +1 CRISTAL]" com os valores reais (a Zona pode reduzir o XP).
+export function msgMissaoConcluida(xp, cristais) {
+  if (xp === 10 && cristais === 1) return mensagens.missaoConcluida;
+  const c = cristais === 1 ? "CRISTAL" : "CRISTAIS";
+  return `[MISSÃO CONCLUÍDA: +${xp} XP · +${cristais} ${c}]`;
+}

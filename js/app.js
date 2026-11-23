@@ -3,6 +3,7 @@ import { montarNovaVersao } from "./atualizacao.js";
 import { aoAbrir } from "./abertura.js";
 import { emModoTeste } from "./nucleo/db.js";
 import { lerCacador } from "./nucleo/cacador.js";
+import { abrirDia } from "./nucleo/diario.js";
 
 const ROTAS = ["missoes", "status", "ouro", "corpo", "mente", "ajustes", "despertar"];
 const PADRAO = "missoes";
@@ -51,6 +52,13 @@ if (emModoTeste()) {
 }
 
 window.addEventListener("hashchange", mostrar);
+
+// Ao voltar do segundo plano: avalia dias que viraram e redesenha as Missões.
+document.addEventListener("visibilitychange", async () => {
+  if (document.hidden) return;
+  await abrirDia().catch(() => {});
+  if (rotaAtual().rota === "missoes") mostrar();
+});
 mostrar();
 aoAbrir();
 
