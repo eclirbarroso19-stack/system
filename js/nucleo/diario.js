@@ -4,7 +4,7 @@ import { diaDoJogo, somarDias, agora } from "./dia.js";
 import { ganhar, lerCacador, lerDia } from "./cacador.js";
 import {
   criarDiaVazio, diasParaAvaliar, processarDiaEncerrado, recompensaDaMissao,
-  MISSOES_V1, MISSOES_ZONA, RECOMPENSAS,
+  MISSOES_V1, MISSOES_ZONA, RECOMPENSAS, RAID_XP, raidTerminou, registrarRaidConcluido, resumoRaids,
 } from "./regras.js";
 
 let _rodando = null;
@@ -138,10 +138,30 @@ export async function iniciarRaid(minutos) {
   await salvar("dias", dia);
 }
 
+// Cancelar não dá XP e não entra na lista de raids.
 export async function cancelarRaid() {
   const dia = await lerDia();
   delete dia.raid;
   await salvar("dias", dia);
+}
+
+// Se o cronômetro do Raid acabou (app aberto ou fechado): registra na lista do dia e paga +5 XP
+// (só os 4 primeiros do dia). NÃO conclui a Missão Principal.
+// Devolve null (nada a fazer) ou { daXP, subiuPara, n, minutos }.
+export async function finalizarRaidSeTerminou() {
+  const dia = await lerDia();
+  if (!raidTerminou(dia.raid, agora().getTime())) return null;
+  const { raids, daXP } = registrarRaidConcluido(dia.raids, dia.raid);
+  dia.raids = raids;
+  delete dia.raid; // remove antes de pagar: assim nunca paga duas vezes
+  await salvar("dias", dia);
+  let subiuPara = [];
+  if (daXP) {
+    const g = await ganhar({ xp: RAID_XP, tipo: "raid", descricao: `Raid de Foco ${raids[raids.length - 1].minutos} min` });
+    subiuPara = g.subiuPara;
+  }
+  const r = resumoRaids(raids);
+  return { daXP, subiuPara, n: r.n, minutos: r.minutos };
 }
 
 // Missão 4: cumprida com >=1 registro (ou "não gastei nada") e nenhum gasto por impulso.

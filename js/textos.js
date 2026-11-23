@@ -69,6 +69,8 @@ export const mensagens = {
   missaoDisponivel: "[MISSÃO DIÁRIA DISPONÍVEL]",
   missaoConcluida: "[MISSÃO CONCLUÍDA: +10 XP · +1 CRISTAL]",
   todasConcluidas: "[MISSÃO DIÁRIA CONCLUÍDA. RECOMPENSA: +30 XP · +5 CRISTAIS]",
+  raidConcluido: "[RAID CONCLUÍDO: +5 XP]",
+  raidConcluidoSemXP: "[RAID CONCLUÍDO. O LIMITE DE XP DE RAIDS DE HOJE FOI ATINGIDO.]",
   levelUp: "[LEVEL UP! NÍVEL {N} ALCANÇADO. +3 PONTOS DE FOCO]",
   alerta21h: "[ALERTA: O DIA TERMINA EM {H} HORAS. MISSÕES PENDENTES: {X}]",
   penalidade: "[PENALIDADE: −10 HP. MISSÃO DE PUNIÇÃO LIBERADA.]",

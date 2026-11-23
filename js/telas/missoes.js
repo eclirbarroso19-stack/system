@@ -4,9 +4,9 @@ import { lerCacador, lerDia } from "../nucleo/cacador.js";
 import {
   abrirDia, consumirFila, primeiraAberturaDoDia, concluirMissao, desfazerConclusao,
   salvarPrincipalTexto, iniciarRaid, cancelarRaid, ouroCumprido, marcarSemGastos,
-  registrarSono, concluirPunicao,
+  registrarSono, concluirPunicao, finalizarRaidSeTerminou,
 } from "../nucleo/diario.js";
-import { MISSOES_V1, MISSOES_ZONA, nivelDe, missoesPendentes } from "../nucleo/regras.js";
+import { MISSOES_V1, MISSOES_ZONA, nivelDe, missoesPendentes, resumoRaids } from "../nucleo/regras.js";
 import { diaDoJogo, horasAteVirada, noiteDoDia, agora } from "../nucleo/dia.js";
 import { formatarData, nomeDiaSemana } from "../nucleo/formato.js";
 import { mensagens, preencher, msgMissaoConcluida } from "../textos.js";
@@ -47,12 +47,15 @@ export async function montar(elemento) {
     const zona = !!cacador.zona?.ativa;
     const lista = zona ? MISSOES_ZONA : MISSOES_V1;
 
-    // Raid que terminou com o app fechado: conclui agora.
-    if (dia.raid && !dia.missoes.principal && agora().getTime() >= dia.raid.inicio + dia.raid.minutos * 60000) {
-      await cancelarRaid();
+    // Raid que terminou (com o app aberto ou fechado): registra, paga o XP e libera outro.
+    // Não conclui a Missão Principal.
+    let subiuDoRaid = [];
+    const raidFeito = await finalizarRaidSeTerminou();
+    if (raidFeito) {
       if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-      await concluir("principal");
-      return;
+      ultimaMsg = [raidFeito.daXP ? mensagens.raidConcluido : mensagens.raidConcluidoSemXP];
+      subiuDoRaid = raidFeito.subiuPara;
+      dia = await lerDia();
     }
     // Missão 4 é calculada pelos registros do Ouro.
     if (!zona && !dia.missoes.ouro && (await ouroCumprido())) {
@@ -139,38 +142,39 @@ export async function montar(elemento) {
         campo.value = dia.principalTexto || "";
         campo.addEventListener("change", () => salvarPrincipalTexto(campo.value.trim()));
         if (feita) extra.push(el("p", { class: "desc", texto: dia.principalTexto ? `Concluída: ${dia.principalTexto}` : "Concluída." }));
-        else {
-          extra.push(campo);
-          if (dia.raid) {
-            const fim = dia.raid.inicio + dia.raid.minutos * 60000;
-            const contagem = el("div", { class: "contagem" });
-            const atualizar = async () => {
-              const resta = fim - agora().getTime();
-              if (resta <= 0) {
-                limparIntervalo();
-                if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-                await cancelarRaid();
-                await concluir("principal");
-                return;
-              }
-              const s = Math.ceil(resta / 1000);
-              contagem.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-            };
-            extra.push(contagem);
-            atualizar();
-            intervalo = setInterval(atualizar, 1000);
-            acoes.push(
-              botao("CANCELAR RAID", "fantasma", async () => { await cancelarRaid(); await desenhar(); }),
-              botao("JÁ CONCLUÍ", "primario", async () => { await salvarPrincipalTexto(campo.value.trim()); await cancelarRaid(); await concluir("principal"); }),
-            );
-          } else {
-            const iniciar = (min) => async () => { await salvarPrincipalTexto(campo.value.trim()); await iniciarRaid(min); await desenhar(); };
-            acoes.push(
-              botao("RAID DE FOCO 25 MIN", "fantasma", iniciar(25)),
-              botao("RAID DE FOCO 50 MIN", "fantasma", iniciar(50)),
-              botao("JÁ CONCLUÍ", "primario", async () => { await salvarPrincipalTexto(campo.value.trim()); await concluir("principal"); }),
-            );
-          }
+        else extra.push(campo);
+        const rr = resumoRaids(dia.raids);
+        if (rr.n > 0) extra.push(el("p", { class: "desc", texto: `Raids hoje: ${rr.n} (${rr.minutos} min)` }));
+        const concluirPrincipal = async () => {
+          await salvarPrincipalTexto(campo.value.trim());
+          await cancelarRaid(); // cancelar não dá XP
+          await concluir("principal");
+        };
+        if (dia.raid) {
+          const fim = dia.raid.inicio + dia.raid.minutos * 60000;
+          const contagem = el("div", { class: "contagem" });
+          const atualizar = async () => {
+            const resta = fim - agora().getTime();
+            if (resta <= 0) {
+              limparIntervalo();
+              await desenhar(); // o desenhar() registra o Raid e paga o XP
+              return;
+            }
+            const s = Math.ceil(resta / 1000);
+            contagem.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+          };
+          extra.push(contagem);
+          atualizar();
+          intervalo = setInterval(atualizar, 1000);
+          acoes.push(botao("CANCELAR RAID", "fantasma", async () => { await cancelarRaid(); await desenhar(); }));
+          if (!feita) acoes.push(botao("JÁ CONCLUÍ", "primario", concluirPrincipal));
+        } else {
+          const iniciar = (min) => async () => { if (!feita) await salvarPrincipalTexto(campo.value.trim()); await iniciarRaid(min); await desenhar(); };
+          acoes.push(
+            botao("RAID DE FOCO 25 MIN", "fantasma", iniciar(25)),
+            botao("RAID DE FOCO 50 MIN", "fantasma", iniciar(50)),
+          );
+          if (!feita) acoes.push(botao("JÁ CONCLUÍ", "primario", concluirPrincipal));
         }
       }
 
@@ -187,6 +191,7 @@ export async function montar(elemento) {
     }
 
     elemento.replaceChildren(el("h1", { class: "titulo-tela", texto: "MISSÕES DIÁRIAS" }), ...partes);
+    for (const n of subiuDoRaid) levelUp(n, preencher(mensagens.levelUp, { N: n }));
   }
 
   // Resultado já pronto de registrarSono(true) (que chama concluirMissao): mostra mensagens e level up.

@@ -1,3 +1,4 @@
+import { testesRaid } from "./testes-raid.js";
 import { avaliarDia, avaliarPunicao, aplicarHPeZona, processarDiaEncerrado, diasParaAvaliar, missoesPendentes, recompensaDaMissao, MISSOES_V1 } from "../js/nucleo/regras.js";
 import { somarDias, noiteDoDia } from "../js/nucleo/dia.js";
 import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, corDoRank, areasMaisFracas, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
@@ -277,3 +278,5 @@ testes.push(
     igual(noiteDoDia(new Date(2026, 10, 24, 4, 0)), false);
   } },
 );
+
+testes.push(...testesRaid);

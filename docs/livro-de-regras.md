@@ -165,7 +165,7 @@ Chegar no nível mínimo **libera o Exame de Promoção**.
 |---|---|---|
 | 1 | Treino **ou** Recuperação | registro de treino ou dia de descanso planejado |
 | 2 | Beber 2L de água | toque |
-| 3 | Missão Principal | concluir com o cronômetro (o "Raid de Foco") |
+| 3 | Missão Principal | botão JÁ CONCLUÍ (o Raid de Foco ajuda, mas não conclui a missão) |
 | 4 | Registro do Ouro sem impulso | registrou os gastos e nenhum foi marcado como impulso |
 | 5 | Dormir antes das 23h | marcado na manhã seguinte |
 
@@ -184,6 +184,7 @@ A intensidade se ajusta ao rank. No Rank E: 10 flexões, 15 agachamentos e 15 mi
 ### 5.3 Missões Principais e Secundárias
 
 - **Principais:** no máximo **3 por dia** e aparecem primeiro. Cada uma tem um cronômetro de 25 ou 50 min, que é o **Raid de Foco**.
+- **Raid de Foco:** cronômetro de 25 ou 50 min. Ao terminar (com o app aberto ou fechado) o app mostra `[RAID CONCLUÍDO: +5 XP]` e libera outro. Só os **4 primeiros raids do dia** dão XP. Cancelar não dá XP. A Missão Principal só é concluída pelo botão **JÁ CONCLUÍ**. O cartão mostra "Raids hoje: N (M min)".
 - **Secundárias:** as urgentes e pequenas.
 - O jogador estima o tempo e o app registra o real. Após 2 semanas aparece o fator pessoal ("você leva 1,6× o que estima").
 - **Horário de expediente** configurável: as missões de trabalho somem fora dele.

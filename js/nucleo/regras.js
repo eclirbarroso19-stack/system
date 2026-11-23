@@ -95,6 +95,7 @@ export function criarDiaVazio(dia) {
     missoes: { treino: false, agua: false, principal: false, ouro: false, sono: false },
     principalTexto: "",
     semGastos: false,
+    raids: [],
     punicao: { ativa: false, feita: false },
     xpDia: 0,
     avaliado: false,
@@ -103,6 +104,28 @@ export function criarDiaVazio(dia) {
 }
 
 const limitar = (v, min, max) => Math.max(min, Math.min(max, v));
+
+// ---- Raid de Foco (Livro 5.3): cada Raid terminado dá +5 XP, só os 4 primeiros do dia ----
+export const RAID_XP = 5;
+export const RAIDS_COM_XP_POR_DIA = 4;
+
+// O cronômetro terminou? (início em milissegundos)
+export function raidTerminou(raid, agoraMs) {
+  return !!raid && agoraMs >= raid.inicio + raid.minutos * 60000;
+}
+
+// Registra um Raid terminado na lista do dia. Devolve { raids, daXP }.
+export function registrarRaidConcluido(raids, raid) {
+  const lista = Array.isArray(raids) ? raids : [];
+  const daXP = lista.length < RAIDS_COM_XP_POR_DIA;
+  return { raids: [...lista, { inicio: raid.inicio, minutos: raid.minutos, xp: daXP }], daXP };
+}
+
+// { n, minutos } para "Raids hoje: N (M min)".
+export function resumoRaids(raids) {
+  const lista = Array.isArray(raids) ? raids : [];
+  return { n: lista.length, minutos: lista.reduce((s, r) => s + r.minutos, 0) };
+}
 
 // Calcula o efeito de um ganho/perda sobre o caçador e o dia, sem gravar nada.
 // Devolve { cacador, dia, evento, subiuPara } (novos objetos).
