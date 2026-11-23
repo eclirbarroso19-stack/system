@@ -69,9 +69,10 @@ export function modal({ titulo, conteudo, botoes = [] }) {
 }
 
 // Aviso rápido embaixo da tela. desfazer: função opcional (mostra o botão DESFAZER).
-export function toast(texto, { desfazer, duracao = 5000 } = {}) {
+export function toast(texto, { desfazer, duracao = 5000, acao } = {}) {
   const t = el("div", { class: "toast", role: "status" }, [el("span", { texto })]);
   const fechar = () => t.remove();
+  if (acao) t.append(botao(acao.rotulo, "fantasma", () => { fechar(); acao.aoClicar(); }));
   if (desfazer) t.append(botao("DESFAZER", "fantasma", () => { fechar(); desfazer(); }));
   document.body.append(t);
   setTimeout(fechar, duracao);

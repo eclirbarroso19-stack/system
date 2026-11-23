@@ -4,7 +4,7 @@ import { lerCacador, lerDia } from "../nucleo/cacador.js";
 import {
   abrirDia, consumirFila, primeiraAberturaDoDia, concluirMissao, desfazerConclusao,
   salvarPrincipalTexto, iniciarRaid, cancelarRaid, ouroCumprido, marcarSemGastos,
-  registrarSono, concluirPunicao, finalizarRaidSeTerminou,
+  registrarSono, concluirPunicao, finalizarRaidSeTerminou, sincronizarOuro,
 } from "../nucleo/diario.js";
 import { MISSOES_V1, MISSOES_ZONA, nivelDe, missoesPendentes, resumoRaids } from "../nucleo/regras.js";
 import { diaDoJogo, horasAteVirada, noiteDoDia, agora } from "../nucleo/dia.js";
@@ -58,9 +58,9 @@ export async function montar(elemento) {
       dia = await lerDia();
     }
     // Missão 4 é calculada pelos registros do Ouro.
-    if (!zona && !dia.missoes.ouro && (await ouroCumprido())) {
-      await concluir("ouro");
-      return;
+    if (!zona) {
+      const s = await sincronizarOuro();
+      if (s.concluida) { await concluirResultado(s.concluida); return; }
     }
     dia = await lerDia();
 
@@ -136,7 +136,10 @@ export async function montar(elemento) {
           botao("NÃO", "fantasma", async () => { await registrarSono(false); await desenhar(); }),
         );
       } else if (m.id === "ouro") {
-        if (!feita) acoes.push(botao("HOJE NÃO GASTEI NADA", "primario", async () => { await marcarSemGastos(); await desenhar(); }));
+        if (!feita) acoes.push(botao("REGISTRAR NO OURO", "fantasma", () => { location.hash = "#ouro"; }), botao("HOJE NÃO GASTEI NADA", "primario", async () => {
+          const s = await marcarSemGastos();
+          if (s.concluida) await concluirResultado(s.concluida); else await desenhar();
+        }));
       } else if (m.id === "principal") {
         const campo = el("input", { type: "text", class: "campo", maxlength: "120", placeholder: "Qual é a missão principal de hoje?" });
         campo.value = dia.principalTexto || "";

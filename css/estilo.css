@@ -144,3 +144,29 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .msg-fila { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .msg-fila .msg-sistema { flex: 1; margin: 0; }
 .msg-fila .botao { min-width: 64px; padding: 0 12px; }
+
+/* ---- Ouro (etapa 1.5) ---- */
+.fluxo { position: fixed; inset: 0; z-index: 35; background: var(--fundo); display: flex; flex-direction: column; padding: 16px; overflow-y: auto; }
+.fluxo-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.fluxo-topo h2 { margin: 0; font-family: var(--fonte-titulo); font-weight: 400; font-size: 1rem; color: var(--azul); }
+.fluxo-corpo { display: flex; flex-direction: column; gap: 12px; max-width: 480px; width: 100%; margin: 0 auto; }
+.rotulo { color: var(--texto2); font-size: 1rem; margin: 4px 0 0; }
+.campo-valor { font-size: 2rem; min-height: 64px; text-align: center; }
+.valor-grande { font-family: var(--fonte-titulo); font-size: 1.6rem; color: var(--azul); text-align: center; margin: 0; }
+.grade-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.botao.cat { min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: var(--fonte-texto); font-weight: 700; font-size: 0.95rem; letter-spacing: 0; text-transform: none; border-color: #2a2a44; padding: 6px; }
+.emoji { font-size: 1.4rem; }
+.seletor-mes { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; text-transform: capitalize; }
+.seletor-mes .botao { min-width: 48px; padding: 0 12px; }
+.numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
+.num-rotulo { display: block; color: var(--texto2); font-family: var(--fonte-titulo); font-size: 0.65rem; letter-spacing: 1px; }
+.num strong { font-size: 1.05rem; font-weight: 700; }
+.num strong.negativo { color: var(--perigo); }
+.acoes .botao.gasto { background: var(--roxo); flex: 1; }
+.acoes .botao.entrada { background: var(--azul); color: #0A0A12; flex: 1; }
+.subtitulo-azul { margin: 0 0 8px; font-family: var(--fonte-titulo); font-weight: 400; font-size: 0.85rem; color: var(--azul); }
+.lancamento { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 6px 4px; background: none; border: 0; border-bottom: 1px solid #1d1d33; color: var(--texto); font: inherit; text-align: left; cursor: pointer; }
+.l-nome { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.entrada-valor { color: var(--azul); }
+.tag { font-family: var(--fonte-titulo); font-size: 0.55rem; letter-spacing: 1px; padding: 2px 6px; border: 1px solid var(--texto2); border-radius: 6px; color: var(--texto2); }
+.tag.perigo { border-color: var(--perigo); color: var(--perigo); }

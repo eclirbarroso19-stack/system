@@ -6,6 +6,7 @@ import {
   criarDiaVazio, diasParaAvaliar, processarDiaEncerrado, recompensaDaMissao,
   MISSOES_V1, MISSOES_ZONA, RECOMPENSAS, RAID_XP, raidTerminou, registrarRaidConcluido, resumoRaids,
 } from "./regras.js";
+import { statusMissaoOuro, planoDoOuro, criarLancamento } from "./ouro.js";
 
 let _rodando = null;
 
@@ -167,16 +168,86 @@ export async function finalizarRaidSeTerminou() {
 // Missão 4: cumprida com >=1 registro (ou "não gastei nada") e nenhum gasto por impulso.
 export async function ouroCumprido() {
   const dia = await lerDia();
-  const registros = await listarPorDia("ouro", dia.dia);
-  const saidas = registros.filter((r) => r.tipo === "saida");
-  if (saidas.some((r) => r.impulso)) return false;
-  return saidas.length > 0 || !!dia.semGastos;
+  return statusMissaoOuro(await listarPorDia("ouro", dia.dia), dia.semGastos).cumprida;
+}
+
+// Ajusta a missão 4 e a recompensa do Ouro (no máximo +10 XP +1 Cristal por dia) conforme os registros.
+// Devolve { concluida (resultado de concluirMissao ou null), pagouRegistro, subiuPara, impulso }.
+export async function sincronizarOuro() {
+  const cacador = await lerCacador();
+  const saida = { concluida: null, pagouRegistro: false, subiuPara: [], impulso: false };
+  if (!cacador) return saida;
+  const dia = await lerDia();
+  const regs = await listarPorDia("ouro", dia.dia);
+  const zona = !!cacador.zona?.ativa;
+  const plano = planoDoOuro({
+    lancamentosDoDia: regs, semGastos: dia.semGastos,
+    missaoMarcada: !!dia.missoes.ouro, jaPagou: !!dia.ouroPago,
+  });
+  saida.impulso = plano.status.motivo === "impulso";
+
+  if (zona) {
+    // Na Zona a missão 4 não existe: só paga o registro do dia, uma vez.
+    if (!dia.ouroPago && regs.length > 0) {
+      dia.ouroPago = true;
+      await salvar("dias", dia);
+      const g = await ganhar({ ...RECOMPENSAS.registroOuro, tipo: "registro-ouro", descricao: "Registro do Ouro do dia" });
+      saida.pagouRegistro = true;
+      saida.subiuPara = g.subiuPara;
+    }
+    return saida;
+  }
+
+  if (plano.completarMissao) {
+    if (plano.pagaMissao) {
+      dia.ouroPago = true;
+      await salvar("dias", dia);
+      saida.concluida = await concluirMissao("ouro");
+      saida.pagouRegistro = !!saida.concluida;
+      if (saida.concluida) saida.subiuPara = saida.concluida.subiuPara;
+    } else { // já pago antes (impulso corrigido): só remarca, sem pagar de novo
+      dia.missoes.ouro = true;
+      await salvar("dias", dia);
+    }
+  } else if (plano.desmarcarMissao) {
+    dia.missoes.ouro = false; // a recompensa já paga não é estornada
+    await salvar("dias", dia);
+  } else if (plano.pagarRegistro) {
+    dia.ouroPago = true;
+    await salvar("dias", dia);
+    const g = await ganhar({ ...RECOMPENSAS.registroOuro, tipo: "registro-ouro", descricao: "Registro do Ouro do dia (com impulso)" });
+    saida.pagouRegistro = true;
+    saida.subiuPara = g.subiuPara;
+  }
+  return saida;
 }
 
 export async function marcarSemGastos() {
   const dia = await lerDia();
   dia.semGastos = true;
   await salvar("dias", dia);
+  return sincronizarOuro();
+}
+
+// Registra um lançamento no dia do jogo atual. Devolve { lancamento, sync }.
+export async function registrarLancamento(dados) {
+  const lancamento = criarLancamento(dados, diaDoJogo(), agora().getTime());
+  lancamento.id = await adicionar("ouro", lancamento);
+  return { lancamento, sync: await sincronizarOuro() };
+}
+
+export async function editarLancamento(id, mudancas) {
+  const atual = await obter("ouro", id);
+  if (!atual) return null;
+  const novo = criarLancamento({ ...atual, ...mudancas }, atual.dia, atual.quando);
+  novo.id = id;
+  await salvar("ouro", novo);
+  return { lancamento: novo, sync: await sincronizarOuro() };
+}
+
+export async function apagarLancamento(id) {
+  await apagar("ouro", id);
+  return sincronizarOuro();
 }
 
 export async function registrarSono(dormiuCedo) {
