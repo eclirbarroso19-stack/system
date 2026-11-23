@@ -1,7 +1,10 @@
 import { el, botao, modal, toast } from "../ui.js";
 import { VERSAO_APP, VERSAO_DADOS } from "../config.js";
 import { avisos } from "../textos.js";
-import { lerMeta, limparTudo } from "../nucleo/db.js";
+import { lerMeta, limparTudo, emModoTeste } from "../nucleo/db.js";
+import { avancarDiaTeste } from "../nucleo/dia.js";
+import { abrirDia } from "../nucleo/diario.js";
+import { gerarDadosFicticios } from "../nucleo/ficticios.js";
 import { formatarData } from "../nucleo/formato.js";
 import { fazerBackup, escolherEPedirRestauracao } from "../backup-ui.js";
 
@@ -45,6 +48,24 @@ export async function montar(elemento) {
     el("p", { class: "aviso", texto: "Atualiza só os ranks provisórios. Não mexe em XP, HP nem Cristais." }),
   ]);
 
+  // Só no modo de teste (?teste=1): viajar no tempo e gerar dados fictícios.
+  const teste = emModoTeste() ? el("div", { class: "cartao" }, [
+    el("h2", { class: "subtitulo azul", texto: "MODO DE TESTE" }),
+    el("div", { class: "grupo-botoes" }, [
+      botao("AVANÇAR 1 DIA", "primario", async () => {
+        avancarDiaTeste();
+        await abrirDia();
+        toast("Um dia avançou. Veja a aba MISSÕES.");
+        location.hash = "#missoes";
+        window.dispatchEvent(new Event("hashchange"));
+      }),
+      botao("GERAR DADOS FICTÍCIOS", "fantasma", async () => {
+        const n = await gerarDadosFicticios();
+        toast(n + " dias fictícios criados.");
+      }),
+    ]),
+  ]) : null;
+
   const perigo = el("div", { class: "cartao zona-perigo" }, [
     el("h2", { class: "subtitulo", texto: "ZONA DE PERIGO" }),
     botao("Apagar tudo", "perigo", pedirApagarTudo),
@@ -55,6 +76,7 @@ export async function montar(elemento) {
     memoria,
     el("p", { class: "aviso", texto: avisos.geral + "." }),
     despertar,
+    ...(teste ? [teste] : []),
     el("div", { class: "cartao" }, [linha("Versão do app", VERSAO_APP), linha("Versão dos dados", String(VERSAO_DADOS))]),
     perigo,
   );
