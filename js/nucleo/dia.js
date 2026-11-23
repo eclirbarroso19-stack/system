@@ -1,14 +1,14 @@
 // Dia do jogo: vira às 4h da manhã (hora local). Nunca use toISOString().
 const QUATRO_HORAS = 4 * 60 * 60 * 1000;
 
-export function diaDoJogo(data = new Date()) {
+export function diaDoJogo(data = agora()) {
   const d = new Date(data.getTime() - QUATRO_HORAS);
   const p = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 // Horas inteiras (arredondadas para cima) até as próximas 4h.
-export function horasAteVirada(data = new Date()) {
+export function horasAteVirada(data = agora()) {
   const prox = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 4, 0, 0, 0);
   if (data.getTime() >= prox.getTime()) prox.setDate(prox.getDate() + 1);
   return Math.ceil((prox.getTime() - data.getTime()) / 3600000);
@@ -24,4 +24,37 @@ export function diasEntre(a, b) {
 export function diaDaSemana(dia) {
   const [y, m, d] = dia.split("-").map(Number);
   return new Date(y, m - 1, d).getDay();
+}
+
+// "AAAA-MM-DD" + n dias (n pode ser negativo), sem fuso.
+export function somarDias(dia, n) {
+  const [y, m, d] = dia.split("-").map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d + n));
+  const p = (x) => String(x).padStart(2, "0");
+  return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())}`;
+}
+
+// ---- Relógio do app (com deslocamento só no modo de teste) ----
+function modoTeste() {
+  return typeof location !== "undefined" && new URLSearchParams(location.search).get("teste") === "1";
+}
+
+export function deslocamentoTeste() {
+  if (!modoTeste()) return 0;
+  try { return Number(sessionStorage.getItem("deslocamentoTeste") || 0); } catch { return 0; }
+}
+
+export function avancarDiaTeste() {
+  if (!modoTeste()) return;
+  try { sessionStorage.setItem("deslocamentoTeste", String(deslocamentoTeste() + 24 * 3600000)); } catch { /* sem sessionStorage */ }
+}
+
+export function agora() {
+  return new Date(Date.now() + deslocamentoTeste());
+}
+
+// Hora local entre 21h e 4h: o dia do jogo está acabando.
+export function noiteDoDia(data = agora()) {
+  const h = data.getHours();
+  return h >= 21 || h < 4;
 }

@@ -1,3 +1,5 @@
+import { avaliarDia, avaliarPunicao, aplicarHPeZona, processarDiaEncerrado, diasParaAvaliar, missoesPendentes, recompensaDaMissao, MISSOES_V1 } from "../js/nucleo/regras.js";
+import { somarDias, noiteDoDia } from "../js/nucleo/dia.js";
 import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, corDoRank, areasMaisFracas, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
 import { diaDoJogo, horasAteVirada } from "../js/nucleo/dia.js";
 import { formatarReais, lerReais, formatarData, nomeDiaSemana } from "../js/nucleo/formato.js";
@@ -186,5 +188,92 @@ testes.push(
     igual(areasMaisFracas(rk({ a: "E", b: "E", c: "E" })).length, 0);
     igual(areasMaisFracas({}).length, 0);
     igual(areasMaisFracas(rk({ a: "S", b: "E" })).join(","), "b");
+  } },
+);
+
+const diaCom = (n, extra = {}) => {
+  const d = criarDiaVazio("2026-11-24");
+  ["treino", "agua", "principal", "ouro", "sono"].slice(0, n).forEach((m) => { d.missoes[m] = true; });
+  return { ...d, ...extra };
+};
+const cac = (hp, extra = {}) => ({ ...criarCacadorInicial("T"), hp, ...extra });
+
+testes.push(
+  { nome: "avaliarDia: 5/5 +5, 3/5 +5, 2/5 -10 com punição", rodar() {
+    igual(avaliarDia(diaCom(5)).deltaHP, 5);
+    igual(avaliarDia(diaCom(3)).deltaHP, 5);
+    igual(avaliarDia(diaCom(3)).gerarPunicao, false);
+    const r = avaliarDia(diaCom(2));
+    igual(r.deltaHP, -10); igual(r.gerarPunicao, true); igual(r.total, 5);
+    igual(avaliarDia(diaCom(0)).deltaHP, -10);
+  } },
+  { nome: "avaliarDia na Zona: sem perda de HP e conta só com as 3 mínimas", rodar() {
+    const parcial = criarDiaVazio("2026-11-24"); parcial.missoes.agua = true;
+    const a = avaliarDia(parcial, { zona: true });
+    igual(a.deltaHP, 0); igual(a.gerarPunicao, false); igual(a.contaParaZona, false);
+    const cheio = criarDiaVazio("2026-11-24"); Object.assign(cheio.missoes, { agua: true, sono: true, caminhada10: true });
+    igual(avaliarDia(cheio, { zona: true }).contaParaZona, true);
+  } },
+  { nome: "avaliarPunicao: não feita = -10 HP e -10 Cristais", rodar() {
+    const r = avaliarPunicao({ punicao: { ativa: true, feita: false } });
+    igual(r.deltaHP, -10); igual(r.deltaCristais, -10);
+    igual(avaliarPunicao({ punicao: { ativa: true, feita: true } }).deltaHP, 0);
+    igual(avaliarPunicao({ punicao: { ativa: false, feita: false } }).deltaCristais, 0);
+  } },
+  { nome: "processarDiaEncerrado: Cristais nunca abaixo de 0 e XP intacto", rodar() {
+    const d = diaCom(5, { punicao: { ativa: true, feita: false } });
+    const r = processarDiaEncerrado(cac(100, { cristais: 4, xpTotal: 500 }), d);
+    igual(r.cacador.cristais, 0);
+    igual(r.cacador.hp, 95); // +5 -10
+    igual(r.cacador.xpTotal, 500);
+    igual(r.eventos.find((e) => e.tipo === "punicao-nao-feita").cristais, -4);
+  } },
+  { nome: "HP 10 com falha vai a 0 e entra na Zona", rodar() {
+    const r = processarDiaEncerrado(cac(10), diaCom(1));
+    igual(r.cacador.hp, 0);
+    igual(r.cacador.zona.ativa, true);
+    igual(r.mensagens.includes("hpZerou"), true);
+    igual(r.mensagens.includes("penalidade"), true);
+  } },
+  { nome: "Zona: 3 dias cumpridos devolvem HP 50", rodar() {
+    let c = cac(0, { zona: { ativa: true, diasCumpridos: 0 } });
+    const bom = criarDiaVazio("2026-11-24"); Object.assign(bom.missoes, { agua: true, sono: true, caminhada10: true });
+    for (let i = 0; i < 2; i++) { c = processarDiaEncerrado(c, bom).cacador; igual(c.zona.ativa, true); igual(c.hp, 0); }
+    const r = processarDiaEncerrado(c, bom);
+    igual(r.cacador.zona.ativa, false); igual(r.cacador.hp, 50);
+    igual(r.mensagens.includes("saiuDaZona"), true);
+    // dia ruim na Zona não conta e não tira HP
+    const ruim = processarDiaEncerrado(cac(0, { zona: { ativa: true, diasCumpridos: 2 } }), criarDiaVazio("2026-11-24"));
+    igual(ruim.cacador.zona.diasCumpridos, 2); igual(ruim.cacador.hp, 0);
+  } },
+  { nome: "aplicarHPeZona: limita 0 a 100", rodar() {
+    igual(aplicarHPeZona(cac(98), 5).cacador.hp, 100);
+    igual(aplicarHPeZona(cac(5), -50).cacador.hp, 0);
+    igual(aplicarHPeZona(cac(5), -50).entrouNaZona, true);
+  } },
+  { nome: "diasParaAvaliar: só dias encerrados, no máximo 7 (os últimos)", rodar() {
+    igual(diasParaAvaliar("2026-11-23", "2026-11-24").length, 0);
+    igual(diasParaAvaliar("2026-11-22", "2026-11-24").join(","), "2026-11-23");
+    const lista = diasParaAvaliar("2026-11-10", "2026-11-24"); // 13 dias encerrados
+    igual(lista.length, 7); igual(lista[0], "2026-11-17"); igual(lista[6], "2026-11-23");
+    igual(diasParaAvaliar(undefined, "2026-11-24").length, 0);
+  } },
+  { nome: "somarDias atravessa mês e ano", rodar() {
+    igual(somarDias("2026-11-30", 1), "2026-12-01");
+    igual(somarDias("2026-12-31", 1), "2027-01-01");
+    igual(somarDias("2026-03-01", -1), "2026-02-28");
+  } },
+  { nome: "missoesPendentes e recompensas das missões", rodar() {
+    igual(missoesPendentes(diaCom(2)).length, 3);
+    igual(missoesPendentes(criarDiaVazio("x"), { zona: true }).length, 3);
+    igual(recompensaDaMissao("agua").xp, 10);
+    igual(recompensaDaMissao("treino", true).xp, 15);
+    igual(MISSOES_V1.length, 5);
+  } },
+  { nome: "noiteDoDia: a partir das 21h até as 4h", rodar() {
+    igual(noiteDoDia(new Date(2026, 10, 24, 20, 59)), false);
+    igual(noiteDoDia(new Date(2026, 10, 24, 21, 0)), true);
+    igual(noiteDoDia(new Date(2026, 10, 24, 3, 30)), true);
+    igual(noiteDoDia(new Date(2026, 10, 24, 4, 0)), false);
   } },
 );
