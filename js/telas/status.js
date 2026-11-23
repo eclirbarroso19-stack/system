@@ -1,7 +1,7 @@
 // Tela STATUS: ficha do caçador, radar, áreas e atributos.
 import { el, barra, letraRank } from "../ui.js";
 import { lerCacador } from "../nucleo/cacador.js";
-import { nivelDe, AREAS, areasMaisFracas } from "../nucleo/regras.js";
+import { nivelDe, AREAS, areasMaisFracas, aplicarTetoDiagnostico } from "../nucleo/regras.js";
 import { perguntasDespertar } from "../textos.js";
 import { radar } from "../radar.js";
 
@@ -39,12 +39,13 @@ export async function montar(elemento) {
     el("p", { class: "aviso", texto: "A distribuição dos Pontos de Foco chega numa versão futura." }),
   ]);
 
-  const notas = Object.fromEntries(AREAS.map((a) => [a, c.ranksArea[a]?.nota ?? 0]));
+  const ranksArea = aplicarTetoDiagnostico(c.ranksArea); // teto do diagnóstico (Livro 12)
+  const notas = Object.fromEntries(AREAS.map((a) => [a, ranksArea[a]?.nota ?? 0]));
   // Ordem fixa (nunca por rank). A marca vai só nas áreas de rank mais baixo.
-  const fracas = areasMaisFracas(c.ranksArea);
+  const fracas = areasMaisFracas(ranksArea);
   const areas = el("div", { class: "cartao" }, AREAS.map((a) => {
     const p = perguntasDespertar.find((q) => q.area === a);
-    const r = c.ranksArea[a];
+    const r = ranksArea[a];
     const nome = el("span", { class: "nome" }, [`${p.emoji} ${p.nome}`]);
     if (fracas.includes(a)) nome.append(el("span", { class: "mais-fraca", texto: "⚠ MAIS FRACA" }));
     const selo = el("span", { class: "selo" }, r

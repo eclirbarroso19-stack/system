@@ -92,5 +92,13 @@ export function somarMes(ym, n) {
 const NOMES_MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 export function nomeDoMes(ym) {
   const [a, m] = ym.split("-").map(Number);
-  return `${NOMES_MESES[m - 1]} de ${a}`;
+  const nome = NOMES_MESES[m - 1];
+  return `${nome.charAt(0).toUpperCase()}${nome.slice(1)} de ${a}`;
+}
+
+// Aplica uma edição. Nunca altera "id", "dia" nem "quando" (a hora exata do lançamento).
+export function aplicarEdicao(atual, mudancas = {}) {
+  const novo = criarLancamento({ ...atual, ...mudancas }, atual.dia, atual.quando);
+  if (atual.id !== undefined) novo.id = atual.id;
+  return novo;
 }

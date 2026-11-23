@@ -1,7 +1,7 @@
 // Testes do Registro do Ouro (etapa 1.5). Importado por tests/testes.js.
 import {
   CATEGORIAS_SAIDA, CATEGORIAS_ENTRADA, criarLancamento, resumoPeriodo, statusMissaoOuro, planoDoOuro,
-  mesDoDia, limitesDoMes, somarMes, nomeDoMes,
+  mesDoDia, limitesDoMes, somarMes, nomeDoMes, aplicarEdicao,
 } from "../js/nucleo/ouro.js";
 import { diaDoJogo } from "../js/nucleo/dia.js";
 import { formatarReais } from "../js/nucleo/formato.js";
@@ -102,8 +102,21 @@ export const testesOuro = [
     igual(limitesDoMes("2026-11").inicio, "2026-11-01");
     igual(somarMes("2026-12", 1), "2027-01");
     igual(somarMes("2026-01", -1), "2025-12");
-    igual(nomeDoMes("2026-11"), "novembro de 2026");
+    igual(nomeDoMes("2026-11"), "Novembro de 2026");
     igual("2026-11-30" <= limitesDoMes("2026-11").fim, true);
     igual("2026-12-01" <= limitesDoMes("2026-11").fim, false);
   } },
 ];
+
+testesOuro.push(
+  { nome: "Ouro: editar nunca altera 'quando' nem 'dia'", rodar() {
+    const atual = { id: 7, dia: "2026-11-23", quando: 1795500000123, tipo: "saida", valorCentavos: 500, categoria: "mercado", essencial: true, impulso: false, nota: "" };
+    const novo = aplicarEdicao(atual, { valorCentavos: 900, categoria: "lazer", impulso: true, nota: "x", dia: "2030-01-01", quando: 1, id: 99 });
+    igual(novo.quando, 1795500000123);
+    igual(novo.dia, "2026-11-23");
+    igual(novo.id, 7);
+    igual(novo.valorCentavos, 900);
+    igual(novo.impulso, true);
+    igual(atual.valorCentavos, 500); // o original não muda
+  } },
+);

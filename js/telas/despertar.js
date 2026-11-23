@@ -1,7 +1,7 @@
 // Despertar Rápido: abertura, nome, honestidade, 7 perguntas e resultado.
 import { el, botao, barra, mensagemSistema, mensagemComRank } from "../ui.js";
 import { abertura, perguntasDespertar, resultadoDespertar, preencher } from "../textos.js";
-import { notaDaOpcao, rankDaNota, criarCacadorInicial, AREAS } from "../nucleo/regras.js";
+import { notaDaOpcao, notaDespertarRapido, aplicarTetoDiagnostico, rankDaNota, criarCacadorInicial, AREAS } from "../nucleo/regras.js";
 import { diaDoJogo } from "../nucleo/dia.js";
 import { adicionar, salvar } from "../nucleo/db.js";
 import { lerCacador } from "../nucleo/cacador.js";
@@ -88,7 +88,7 @@ export async function montar(elemento, arg) {
 
   async function terminar() {
     const notasArea = {};
-    perguntasDespertar.forEach((p, i) => { notasArea[p.area] = notaDaOpcao(respostas[i]); });
+    perguntasDespertar.forEach((p, i) => { notasArea[p.area] = notaDespertarRapido(respostas[i]); });
     await adicionar("diagnosticos", {
       tipo: "rapido", dia: diaDoJogo(), quando: Date.now(),
       respostas: Object.fromEntries(perguntasDespertar.map((p, i) => [p.area, respostas[i]])),
@@ -124,7 +124,7 @@ export async function montar(elemento, arg) {
       indice = AREAS.length;
       while (lista.children.length < AREAS.length) revelarProxima(true);
       final.replaceChildren(
-        radar(Object.fromEntries(AREAS.map((a) => [a, cacador.ranksArea[a].nota]))),
+        radar(Object.fromEntries(AREAS.map((a) => [a, aplicarTetoDiagnostico(cacador.ranksArea)[a].nota]))),
         mensagemComRank(resultadoDespertar.rankCacador.replace(/RANK DO CAÇADOR: E/, "RANK DO CAÇADOR: \u0001"), cacador.rankCacador),
         mensagemSistema(resultadoDespertar.jornada),
         botao(refazer ? "Voltar aos Ajustes" : "ENTRAR", "primario", () => { ir(refazer ? "#ajustes" : "#missoes"); }),

@@ -156,14 +156,16 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .grade-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .botao.cat { min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: var(--fonte-texto); font-weight: 700; font-size: 0.95rem; letter-spacing: 0; text-transform: none; border-color: #2a2a44; padding: 6px; }
 .emoji { font-size: 1.4rem; }
-.seletor-mes { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; text-transform: capitalize; }
+.seletor-mes { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .seletor-mes .botao { min-width: 48px; padding: 0 12px; }
 .numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
 .num-rotulo { display: block; color: var(--texto2); font-family: var(--fonte-titulo); font-size: 0.65rem; letter-spacing: 1px; }
 .num strong { font-size: 1.05rem; font-weight: 700; }
 .num strong.negativo { color: var(--perigo); }
-.acoes .botao.gasto { background: var(--roxo); flex: 1; }
-.acoes .botao.entrada { background: var(--azul); color: #0A0A12; flex: 1; }
+.botoes-ouro { display: flex; gap: 12px; margin-bottom: 12px; }
+.botoes-ouro .botao { flex: 1 1 0; min-width: 0; }
+.botoes-ouro .botao.gasto { background: var(--roxo); }
+.botoes-ouro .botao.entrada { background: var(--azul); color: #0A0A12; }
 .subtitulo-azul { margin: 0 0 8px; font-family: var(--fonte-titulo); font-weight: 400; font-size: 0.85rem; color: var(--azul); }
 .lancamento { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 6px 4px; background: none; border: 0; border-bottom: 1px solid #1d1d33; color: var(--texto); font: inherit; text-align: left; cursor: pointer; }
 .l-nome { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }

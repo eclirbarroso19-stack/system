@@ -6,7 +6,7 @@ import {
   criarDiaVazio, diasParaAvaliar, processarDiaEncerrado, recompensaDaMissao,
   MISSOES_V1, MISSOES_ZONA, RECOMPENSAS, RAID_XP, raidTerminou, registrarRaidConcluido, resumoRaids,
 } from "./regras.js";
-import { statusMissaoOuro, planoDoOuro, criarLancamento } from "./ouro.js";
+import { statusMissaoOuro, planoDoOuro, criarLancamento, aplicarEdicao } from "./ouro.js";
 
 let _rodando = null;
 
@@ -239,8 +239,7 @@ export async function registrarLancamento(dados) {
 export async function editarLancamento(id, mudancas) {
   const atual = await obter("ouro", id);
   if (!atual) return null;
-  const novo = criarLancamento({ ...atual, ...mudancas }, atual.dia, atual.quando);
-  novo.id = id;
+  const novo = aplicarEdicao({ ...atual, id }, mudancas);
   await salvar("ouro", novo);
   return { lancamento: novo, sync: await sincronizarOuro() };
 }

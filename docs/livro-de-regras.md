@@ -405,6 +405,7 @@ O caminho é sempre o mesmo: situação → pensamento → emoção → reação
 ## 12. Diagnóstico (Teste do Despertar)
 
 - **Despertar Rápido:** 1 pergunta por área, para começar no 1º minuto (v1).
+- **Teto do diagnóstico (23/11/2026):** questionário mede a opinião da pessoa sobre si, não o resultado. Por isso o Despertar Rápido dá no máximo **Rank B** por área e o teste completo no máximo **Rank A**. O **Rank S** de uma área nunca vem de diagnóstico: só é conquistado com o tempo (critério exato em definição; proposta: nota 90+ em 4 reavaliações seguidas + um marco concreto da área).
 - **Teste completo:** 7 portais de ~2 min, 1 pergunta por tela, toque único, perguntas em forma de cena. O rank de cada área é revelado com animação. Dá para pausar.
 - **Bases:**
   - Finanças: I-SFB + Espelho do Dinheiro (Klontz)

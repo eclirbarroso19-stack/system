@@ -1,6 +1,7 @@
 // Tela MISSÕES (inicial): as 5 missões do dia, Raid de Foco, punição e Zona.
 import { el, botao, barra, mensagemSistema, toast, levelUp } from "../ui.js";
 import { lerCacador, lerDia } from "../nucleo/cacador.js";
+import { listarPorDia } from "../nucleo/db.js";
 import {
   abrirDia, consumirFila, primeiraAberturaDoDia, concluirMissao, desfazerConclusao,
   salvarPrincipalTexto, iniciarRaid, cancelarRaid, ouroCumprido, marcarSemGastos,
@@ -42,7 +43,7 @@ export async function montar(elemento) {
 
   async function desenhar() {
     limparIntervalo();
-    const cacador = await lerCacador();
+    let cacador = await lerCacador();
     let dia = await lerDia();
     const zona = !!cacador.zona?.ativa;
     const lista = zona ? MISSOES_ZONA : MISSOES_V1;
@@ -63,6 +64,8 @@ export async function montar(elemento) {
       if (s.concluida) { await concluirResultado(s.concluida); return; }
     }
     dia = await lerDia();
+    cacador = await lerCacador(); // lê de novo: o Raid ou o Ouro acima podem ter pago XP
+    const temGasto = (await listarPorDia("ouro", dia.dia)).some((l) => l.tipo === "saida");
 
     const { nivel, xpNoNivel, xpParaProximo } = nivelDe(cacador.xpTotal);
     const hoje = diaDoJogo();
@@ -136,10 +139,13 @@ export async function montar(elemento) {
           botao("NÃO", "fantasma", async () => { await registrarSono(false); await desenhar(); }),
         );
       } else if (m.id === "ouro") {
-        if (!feita) acoes.push(botao("REGISTRAR NO OURO", "fantasma", () => { location.hash = "#ouro"; }), botao("HOJE NÃO GASTEI NADA", "primario", async () => {
-          const s = await marcarSemGastos();
-          if (s.concluida) await concluirResultado(s.concluida); else await desenhar();
-        }));
+        if (!feita) {
+          acoes.push(botao("REGISTRAR NO OURO", "fantasma", () => { location.hash = "#ouro"; }));
+          if (!temGasto) acoes.push(botao("HOJE NÃO GASTEI NADA", "primario", async () => {
+            const s = await marcarSemGastos();
+            if (s.concluida) await concluirResultado(s.concluida); else await desenhar();
+          }));
+        }
       } else if (m.id === "principal") {
         const campo = el("input", { type: "text", class: "campo", maxlength: "120", placeholder: "Qual é a missão principal de hoje?" });
         campo.value = dia.principalTexto || "";

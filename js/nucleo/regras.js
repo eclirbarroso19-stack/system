@@ -50,6 +50,25 @@ export function rankDaNota(nota) {
   return "E";
 }
 
+// Teto do diagnóstico (Livro 12): o Despertar Rápido dá no máximo a nota 74 (Rank B) por área.
+export const TETO_DESPERTAR_RAPIDO = 74;
+
+export function notaDespertarRapido(indice) {
+  return Math.min(notaDaOpcao(indice), TETO_DESPERTAR_RAPIDO);
+}
+
+// Devolve uma cópia de ranksArea em que as áreas provisórias (vindas do Despertar Rápido)
+// respeitam o teto: nota limitada a 74 e rank recalculado. Protege também dados antigos.
+export function aplicarTetoDiagnostico(ranksArea) {
+  const saida = {};
+  for (const [area, v] of Object.entries(ranksArea || {})) {
+    if (v && v.provisorio && typeof v.nota === "number" && v.nota > TETO_DESPERTAR_RAPIDO) {
+      saida[area] = { ...v, nota: TETO_DESPERTAR_RAPIDO, rank: rankDaNota(TETO_DESPERTAR_RAPIDO) };
+    } else saida[area] = v;
+  }
+  return saida;
+}
+
 // Opção 0..4 vale 0, 25, 50, 75, 100.
 export function notaDaOpcao(indice) {
   return indice * 25;

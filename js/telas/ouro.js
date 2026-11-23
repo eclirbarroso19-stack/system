@@ -181,7 +181,7 @@ export async function montar(elemento) {
       el("div", { class: "numeros" }, [numero("ENTROU", r.entrou), numero("SAIU", r.saiu), numero("SOBROU", r.sobrou, r.sobrou < 0)]),
     ]));
 
-    partes.push(el("div", { class: "acoes" }, [
+    partes.push(el("div", { class: "botoes-ouro" }, [
       botao("+ GASTO", "gasto", () => novoLancamento("saida")),
       botao("+ ENTRADA", "entrada", () => novoLancamento("entrada")),
     ]));
