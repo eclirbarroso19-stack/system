@@ -1,4 +1,5 @@
 import { testesRaid } from "./testes-raid.js";
+import { testesTreino } from "./testes-treino.js";
 import { testesTeto } from "./testes-teto.js";
 import { testesOuro } from "./testes-ouro.js";
 import { avaliarDia, avaliarPunicao, aplicarHPeZona, processarDiaEncerrado, diasParaAvaliar, missoesPendentes, recompensaDaMissao, MISSOES_V1 } from "../js/nucleo/regras.js";
@@ -284,3 +285,4 @@ testes.push(
 testes.push(...testesRaid);
 testes.push(...testesOuro);
 testes.push(...testesTeto);
+testes.push(...testesTreino);
