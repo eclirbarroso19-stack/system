@@ -1,0 +1,178 @@
+// O dia a dia do jogo: avaliação dos dias encerrados, missões e desfazer.
+import { obter, salvar, adicionar, apagar, listarPorDia, lerMeta, gravarMeta } from "./db.js";
+import { diaDoJogo, somarDias, agora } from "./dia.js";
+import { ganhar, lerCacador, lerDia } from "./cacador.js";
+import {
+  criarDiaVazio, diasParaAvaliar, processarDiaEncerrado, recompensaDaMissao,
+  MISSOES_V1, MISSOES_ZONA, RECOMPENSAS,
+} from "./regras.js";
+
+let _rodando = null;
+
+// Roda ao iniciar o app e ao voltar do segundo plano. Seguro chamar várias vezes.
+export function abrirDia() {
+  if (_rodando) return _rodando;
+  _rodando = _abrirDia().finally(() => { _rodando = null; });
+  return _rodando;
+}
+
+async function _abrirDia() {
+  let cacador = await lerCacador();
+  if (!cacador) return;
+  const hoje = diaDoJogo();
+
+  let diaHoje = await obter("dias", hoje);
+  if (!diaHoje) { diaHoje = criarDiaVazio(hoje); await salvar("dias", diaHoje); }
+
+  let ultimo = await lerMeta("ultimoDiaAvaliado");
+  if (!ultimo) { ultimo = somarDias(hoje, -1); await gravarMeta("ultimoDiaAvaliado", ultimo); }
+
+  const pendentes = diasParaAvaliar(ultimo, hoje);
+  const fila = [];
+  if (pendentes.length) {
+    const anterior = await obter("dias", somarDias(pendentes[0], -1));
+    let carregaPunicao = !!anterior?.resultado?.gerarPunicao;
+    for (const d of pendentes) {
+      const reg = (await obter("dias", d)) || criarDiaVazio(d);
+      if (carregaPunicao && !reg.punicao.ativa) reg.punicao = { ativa: true, feita: false };
+      const r = processarDiaEncerrado(cacador, reg);
+      cacador = r.cacador;
+      reg.avaliado = true;
+      reg.resultado = r.resultado;
+      await salvar("dias", reg);
+      for (const ev of r.eventos) await adicionar("eventos", { dia: d, quando: agora().getTime(), xp: 0, ...ev });
+      fila.push(...r.mensagens);
+      carregaPunicao = r.resultado.gerarPunicao;
+    }
+    await salvar("cacador", cacador);
+    await gravarMeta("ultimoDiaAvaliado", pendentes[pendentes.length - 1]);
+  } else if (ultimo < somarDias(hoje, -1)) {
+    await gravarMeta("ultimoDiaAvaliado", somarDias(hoje, -1));
+  }
+
+  // Punição de hoje, se o dia anterior gerou uma.
+  const ontem = await obter("dias", somarDias(hoje, -1));
+  diaHoje = await obter("dias", hoje);
+  if (ontem?.resultado?.gerarPunicao && !diaHoje.punicaoGerada) {
+    diaHoje.punicao = { ativa: true, feita: false };
+    diaHoje.punicaoGerada = true;
+    await salvar("dias", diaHoje);
+  }
+
+  if (fila.length) await gravarMeta("filaMensagens", [...((await lerMeta("filaMensagens")) || []), ...fila]);
+}
+
+// Devolve as chaves de mensagens pendentes (penalidade, hpZerou, saiuDaZona) e limpa a fila.
+export async function consumirFila() {
+  const fila = (await lerMeta("filaMensagens")) || [];
+  if (fila.length) await gravarMeta("filaMensagens", []);
+  return fila;
+}
+
+// true só na primeira vez que o app é aberto em cada dia do jogo.
+export async function primeiraAberturaDoDia() {
+  const hoje = diaDoJogo();
+  if ((await lerMeta("ultimoDiaMensagem")) === hoje) return false;
+  await gravarMeta("ultimoDiaMensagem", hoje);
+  return true;
+}
+
+function listaDoDia(cacador) {
+  return cacador.zona?.ativa ? MISSOES_ZONA : MISSOES_V1;
+}
+
+// Conclui uma missão do dia: XP, Cristais (e bônus se foi a última).
+// Devolve null se já estava concluída, ou { xpGanho, cristais, subiuPara, todas, recuperacao, snapshot }.
+export async function concluirMissao(id, { recuperacao = false } = {}) {
+  const cacador = await lerCacador();
+  const dia = await lerDia();
+  if (dia.missoes[id]) return null;
+
+  const antesDia = structuredClone(dia);
+  const eventoIds = [];
+  const rec = recompensaDaMissao(id, recuperacao);
+
+  dia.missoes[id] = true;
+  if (id === "treino") dia.recuperacao = recuperacao;
+  await salvar("dias", dia);
+
+  const g1 = await ganhar({
+    xp: rec.xp, cristais: rec.cristais, hp: recuperacao ? 10 : 0,
+    tipo: recuperacao ? "recuperacao" : "missao", descricao: id,
+  });
+  eventoIds.push(g1.eventoId);
+  const subiuPara = [...g1.subiuPara];
+
+  const atual = await lerDia();
+  const todas = listaDoDia(g1.cacador).every((m) => atual.missoes[m.id]) && !atual.bonusDado;
+  if (todas) {
+    atual.bonusDado = true;
+    await salvar("dias", atual);
+    const g2 = await ganhar({ ...RECOMPENSAS.todasMissoes, tipo: "todas-missoes", descricao: "bônus do dia" });
+    eventoIds.push(g2.eventoId);
+    subiuPara.push(...g2.subiuPara);
+  }
+  return {
+    xpGanho: g1.evento.xp, cristais: g1.evento.cristais, subiuPara, todas, recuperacao,
+    snapshot: { cacador, dia: antesDia, eventoIds },
+  };
+}
+
+// Desfaz uma conclusão (só para corrigir toque errado): restaura o estado e apaga os eventos.
+export async function desfazerConclusao(snapshot) {
+  await salvar("cacador", snapshot.cacador);
+  await salvar("dias", snapshot.dia);
+  for (const id of snapshot.eventoIds) await apagar("eventos", id);
+}
+
+export async function salvarPrincipalTexto(texto) {
+  const dia = await lerDia();
+  dia.principalTexto = texto;
+  await salvar("dias", dia);
+}
+
+// Raid de Foco: guarda o início para o cronômetro sobreviver ao app fechado.
+export async function iniciarRaid(minutos) {
+  const dia = await lerDia();
+  dia.raid = { inicio: agora().getTime(), minutos };
+  await salvar("dias", dia);
+}
+
+export async function cancelarRaid() {
+  const dia = await lerDia();
+  delete dia.raid;
+  await salvar("dias", dia);
+}
+
+// Missão 4: cumprida com >=1 registro (ou "não gastei nada") e nenhum gasto por impulso.
+export async function ouroCumprido() {
+  const dia = await lerDia();
+  const registros = await listarPorDia("ouro", dia.dia);
+  const saidas = registros.filter((r) => r.tipo === "saida");
+  if (saidas.some((r) => r.impulso)) return false;
+  return saidas.length > 0 || !!dia.semGastos;
+}
+
+export async function marcarSemGastos() {
+  const dia = await lerDia();
+  dia.semGastos = true;
+  await salvar("dias", dia);
+}
+
+export async function registrarSono(dormiuCedo) {
+  if (dormiuCedo) return concluirMissao("sono");
+  const dia = await lerDia();
+  dia.sonoRespondido = "nao";
+  await salvar("dias", dia);
+  return null;
+}
+
+// Missão de Punição: sem XP.
+export async function concluirPunicao() {
+  const dia = await lerDia();
+  if (!dia.punicao?.ativa || dia.punicao.feita) return false;
+  dia.punicao.feita = true;
+  await salvar("dias", dia);
+  await adicionar("eventos", { dia: dia.dia, quando: agora().getTime(), tipo: "punicao-cumprida", xp: 0, cristais: 0, hp: 0, descricao: "20 min de caminhada extra" });
+  return true;
+}
