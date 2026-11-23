@@ -1,4 +1,5 @@
 import { testesRaid } from "./testes-raid.js";
+import { testesOuro } from "./testes-ouro.js";
 import { avaliarDia, avaliarPunicao, aplicarHPeZona, processarDiaEncerrado, diasParaAvaliar, missoesPendentes, recompensaDaMissao, MISSOES_V1 } from "../js/nucleo/regras.js";
 import { somarDias, noiteDoDia } from "../js/nucleo/dia.js";
 import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, corDoRank, areasMaisFracas, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
@@ -280,3 +281,4 @@ testes.push(
 );
 
 testes.push(...testesRaid);
+testes.push(...testesOuro);
