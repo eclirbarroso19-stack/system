@@ -1,5 +1,5 @@
 // Despertar Rápido: abertura, nome, honestidade, 7 perguntas e resultado.
-import { el, botao, barra, mensagemSistema } from "../ui.js";
+import { el, botao, barra, mensagemSistema, mensagemComRank } from "../ui.js";
 import { abertura, perguntasDespertar, resultadoDespertar, preencher } from "../textos.js";
 import { notaDaOpcao, rankDaNota, criarCacadorInicial, AREAS } from "../nucleo/regras.js";
 import { diaDoJogo } from "../nucleo/dia.js";
@@ -125,7 +125,7 @@ export async function montar(elemento, arg) {
       while (lista.children.length < AREAS.length) revelarProxima(true);
       final.replaceChildren(
         radar(Object.fromEntries(AREAS.map((a) => [a, cacador.ranksArea[a].nota]))),
-        mensagemSistema(resultadoDespertar.rankCacador),
+        mensagemComRank(resultadoDespertar.rankCacador.replace(/RANK DO CAÇADOR: E/, "RANK DO CAÇADOR: \u0001"), cacador.rankCacador),
         mensagemSistema(resultadoDespertar.jornada),
         botao(refazer ? "Voltar aos Ajustes" : "ENTRAR", "primario", () => { ir(refazer ? "#ajustes" : "#missoes"); }),
       );
@@ -137,7 +137,7 @@ export async function montar(elemento, arg) {
       const area = AREAS[lista.children.length];
       const p = perguntasDespertar.find((q) => q.area === area);
       const dado = cacador.ranksArea[area];
-      lista.append(mensagemSistema(preencher(resultadoDespertar.area, { "ÁREA": p.nome.toUpperCase(), RANK: dado.rank })));
+      lista.append(mensagemComRank(preencher(resultadoDespertar.area, { "ÁREA": p.nome.toUpperCase(), RANK: "\u0001" }), dado.rank));
       if (semAgendar) return;
       if (lista.children.length < AREAS.length) temporizador = setTimeout(revelarProxima, reduzido ? 300 : 1200);
       else temporizador = setTimeout(revelarFinal, reduzido ? 300 : 1200);

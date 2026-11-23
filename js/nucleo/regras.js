@@ -123,3 +123,25 @@ export function calcularGanho(cacador, diaReg, { xp = 0, cristais = 0, hp = 0, t
   };
   return { cacador: novo, dia, evento, subiuPara: r.subiuPara };
 }
+
+// ---- Cores e marca dos ranks (CLAUDE.md seção 5) ----
+export const ORDEM_RANKS = ["E", "D", "C", "B", "A", "S"];
+
+const CORES_RANK = { E: "#8A9BB0", D: "#2BE38B", C: "#00D4FF", B: "#B57BFF", A: "#FF8A3D", S: "#FFD34D" };
+
+// ÚNICA fonte da cor de um rank. Só a letra usa essa cor; só o S brilha.
+export function corDoRank(rank) {
+  return CORES_RANK[rank] || CORES_RANK.E;
+}
+
+// Áreas que ganham a marca "⚠ MAIS FRACA": as de rank mais baixo.
+// Em empate, todas as empatadas; nenhuma se todas tiverem o mesmo rank.
+// ranksArea: { area: { rank } }. Considera só as áreas que têm rank.
+export function areasMaisFracas(ranksArea) {
+  const lista = Object.entries(ranksArea || {}).filter(([, v]) => v && ORDEM_RANKS.includes(v.rank));
+  if (lista.length === 0) return [];
+  const indices = lista.map(([, v]) => ORDEM_RANKS.indexOf(v.rank));
+  const menor = Math.min(...indices);
+  if (menor === Math.max(...indices)) return [];
+  return lista.filter(([, v]) => ORDEM_RANKS.indexOf(v.rank) === menor).map(([area]) => area);
+}

@@ -100,7 +100,7 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 
 /* Status */
 .ficha-topo { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-.rank-gigante { font-family: var(--fonte-titulo); font-size: 4.5rem; line-height: 1; color: var(--azul); text-shadow: 0 0 18px var(--azul), 0 0 40px var(--roxo); min-width: 72px; text-align: center; }
+
 .ficha-nome { font-family: var(--fonte-titulo); font-size: 1.2rem; }
 .ficha-classe { color: var(--texto2); }
 .ficha-titulo { font-style: italic; color: var(--azul); }
@@ -108,3 +108,15 @@ body.sem-menu main#tela { padding-bottom: 32px; }
 .subtitulo.azul { color: var(--azul); margin: 16px 0 8px; }
 .tag { margin-left: 8px; padding: 1px 6px; border: 1px solid var(--roxo); border-radius: 4px; font-size: 0.7rem; color: var(--roxo); letter-spacing: 1px; }
 .apagado { color: var(--texto2) !important; font-weight: 500 !important; }
+
+/* Ranks: só a letra tem cor */
+.rank-letra { font-family: var(--fonte-titulo); }
+.rank-letra.gigante { font-size: 4.5rem; line-height: 1; display: inline-block; min-width: 72px; text-align: center; text-shadow: 0 0 14px currentColor; }
+.rank-s { text-shadow: 0 0 8px currentColor, 0 0 18px currentColor; animation: brilho-s 2s ease-in-out infinite; }
+@keyframes brilho-s { 0%, 100% { text-shadow: 0 0 6px currentColor; } 50% { text-shadow: 0 0 10px currentColor, 0 0 26px currentColor; } }
+.rank-letra.gigante:not(.rank-s) { text-shadow: none; }
+.area-linha { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 1rem; }
+.area-linha .nome { min-width: 0; }
+.area-linha .selo { white-space: nowrap; flex-shrink: 0; text-align: right; }
+.area-linha .selo .tag { margin-left: 6px; }
+.mais-fraca { display: block; color: var(--perigo); font-size: 0.8rem; letter-spacing: 1px; }

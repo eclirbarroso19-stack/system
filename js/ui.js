@@ -1,4 +1,5 @@
 import { sistema } from "./textos.js";
+import { corDoRank } from "./nucleo/regras.js";
 
 // Componentes reutilizáveis da interface.
 
@@ -84,4 +85,22 @@ export function telaVazia(elemento, titulo) {
     el("h1", { class: "titulo-tela", texto: titulo }),
     mensagemSistema(sistema.emConstrucao, { digitar: true }),
   );
+}
+
+// Letra de rank colorida (a cor vem de corDoRank; só o S brilha). A letra sempre aparece escrita.
+export function letraRank(rank, extra = "") {
+  const s = el("span", { class: `rank-letra${rank === "S" ? " rank-s" : ""} ${extra}`.trim(), texto: rank });
+  s.style.color = corDoRank(rank);
+  return s;
+}
+
+// Mensagem do Sistema em que o marcador \u0001 vira a letra do rank colorida.
+export function mensagemComRank(texto, rank) {
+  const caixa = el("div", { class: "msg-sistema", role: "status" });
+  const partes = texto.split("\u0001");
+  partes.forEach((p, i) => {
+    caixa.append(p);
+    if (i < partes.length - 1) caixa.append(letraRank(rank));
+  });
+  return caixa;
 }

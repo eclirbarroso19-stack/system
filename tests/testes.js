@@ -1,4 +1,4 @@
-import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
+import { nivelDe, rankDaNota, notaDaOpcao, aplicarXP, xpParaProximo, criarCacadorInicial, criarDiaVazio, corDoRank, areasMaisFracas, calcularGanho, LIMITE_XP_DIA } from "../js/nucleo/regras.js";
 import { diaDoJogo, horasAteVirada } from "../js/nucleo/dia.js";
 import { formatarReais, lerReais, formatarData, nomeDiaSemana } from "../js/nucleo/formato.js";
 import { dataMaisRecente, validarBackup, montarBackup, nomeArquivoBackup, deveLembrarBackup } from "../js/nucleo/backup.js";
@@ -171,5 +171,20 @@ testes.push(
     igual(r.dia.xpDia, 80); igual(r.subiuPara.join(","), "2");
     const r2 = calcularGanho(c, criarDiaVazio("2026-11-24"), { cristais: -10, hp: -500 });
     igual(r2.cacador.cristais, 0); igual(r2.cacador.hp, 0);
+  } },
+);
+
+const rk = (o) => Object.fromEntries(Object.entries(o).map(([k, r]) => [k, { rank: r }]));
+testes.push(
+  { nome: "corDoRank: escada E cinza até S dourado", rodar() {
+    igual(["E", "D", "C", "B", "A", "S"].map(corDoRank).join(","), "#8A9BB0,#2BE38B,#00D4FF,#B57BFF,#FF8A3D,#FFD34D");
+    igual(corDoRank("?"), "#8A9BB0");
+  } },
+  { nome: "areasMaisFracas: uma só, empate e todas iguais", rodar() {
+    igual(areasMaisFracas(rk({ a: "C", b: "D", c: "B" })).join(","), "b");
+    igual(areasMaisFracas(rk({ a: "D", b: "D", c: "B", d: "A" })).join(","), "a,b");
+    igual(areasMaisFracas(rk({ a: "E", b: "E", c: "E" })).length, 0);
+    igual(areasMaisFracas({}).length, 0);
+    igual(areasMaisFracas(rk({ a: "S", b: "E" })).join(","), "b");
   } },
 );

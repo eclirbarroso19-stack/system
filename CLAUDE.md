@@ -73,8 +73,10 @@ Textos que aparecem no app vêm **literalmente** de `docs/textos-v1.md`. Não in
 | Perigo / HP baixo | `#FF3B5C` |
 | Títulos | Audiowide |
 | Texto corrido | Rajdhani |
+| Cor da letra do rank | E `#8A9BB0` · D `#2BE38B` · C `#00D4FF` · B `#B57BFF` · A `#FF8A3D` · S `#FFD34D` com brilho pulsante (só o S brilha) |
 
 - **Mensagens do Sistema:** caixa com borda azul neon, brilho suave (`box-shadow`), texto em MAIÚSCULAS entre colchetes, aparecendo com uma animação curta de "digitação" ou fade.
+- **Ranks:** a cor vai só na letra do rank, nunca no cartão ou no nome da área. A letra sempre aparece escrita (a cor não pode ser a única informação). Na lista de áreas, a ordem é fixa (nunca ordenar por rank) e só a área de rank mais baixo ganha a marca `⚠ MAIS FRACA` (em empate, todas as empatadas, e nenhuma se todas tiverem o mesmo rank).
 - **Barras** de XP, HP e MP com gradiente roxo → azul (o HP fica vermelho abaixo de 30).
 - O estilo lembra uma interface de jogo, sem copiar telas de anime nenhum.
 - **Ícones** já prontos em `design/`. O `icon-512.png` serve como "any" e "maskable", porque o desenho está dentro da zona segura.

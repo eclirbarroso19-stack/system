@@ -1,7 +1,7 @@
 // Tela STATUS: ficha do caçador, radar, áreas e atributos.
-import { el, barra } from "../ui.js";
+import { el, barra, letraRank } from "../ui.js";
 import { lerCacador } from "../nucleo/cacador.js";
-import { nivelDe, AREAS } from "../nucleo/regras.js";
+import { nivelDe, AREAS, areasMaisFracas } from "../nucleo/regras.js";
 import { perguntasDespertar } from "../textos.js";
 import { radar } from "../radar.js";
 
@@ -24,7 +24,7 @@ export async function montar(elemento) {
 
   const ficha = el("div", { class: "cartao ficha" }, [
     el("div", { class: "ficha-topo" }, [
-      el("div", { class: "rank-gigante", texto: c.rankCacador, "aria-label": `Rank ${c.rankCacador}` }),
+      letraRank(c.rankCacador, "gigante"),
       el("div", {}, [
         el("div", { class: "ficha-nome", texto: c.nome }),
         el("div", { class: "ficha-classe", texto: `${c.classe} · Nível ${nivel}` }),
@@ -40,16 +40,17 @@ export async function montar(elemento) {
   ]);
 
   const notas = Object.fromEntries(AREAS.map((a) => [a, c.ranksArea[a]?.nota ?? 0]));
+  // Ordem fixa (nunca por rank). A marca vai só nas áreas de rank mais baixo.
+  const fracas = areasMaisFracas(c.ranksArea);
   const areas = el("div", { class: "cartao" }, AREAS.map((a) => {
     const p = perguntasDespertar.find((q) => q.area === a);
     const r = c.ranksArea[a];
-    return el("div", { class: "linha-ajuste" }, [
-      el("span", { texto: `${p.emoji} ${p.nome}` }),
-      el("span", {}, [
-        el("strong", { texto: r ? `RANK ${r.rank}` : "—" }),
-        ...(r && r.provisorio ? [el("span", { class: "tag", texto: "PROVISÓRIO" })] : []),
-      ]),
-    ]);
+    const nome = el("span", { class: "nome" }, [`${p.emoji} ${p.nome}`]);
+    if (fracas.includes(a)) nome.append(el("span", { class: "mais-fraca", texto: "⚠ MAIS FRACA" }));
+    const selo = el("span", { class: "selo" }, r
+      ? [el("strong", {}, ["RANK ", letraRank(r.rank)]), ...(r.provisorio ? [el("span", { class: "tag", texto: "PROVISÓRIO" })] : [])]
+      : [el("strong", { texto: "—" })]);
+    return el("div", { class: "area-linha" }, [nome, selo]);
   }));
 
   const atributos = el("div", { class: "cartao" }, Object.keys(NOMES_ATRIBUTO).map((k) => {

@@ -500,6 +500,7 @@ O caminho é sempre o mesmo: situação → pensamento → emoção → reação
 | Texto claro | `#E8F7FF` |
 | Fonte de títulos | Audiowide (trocada em 22/11/2026: o til da Orbitron parecia crase) |
 | Fonte de texto | Rajdhani |
+| Cores dos ranks (23/11/2026) | só a letra muda de cor, numa escada que "esquenta": E cinza, D verde, C azul, B roxo, A laranja, S dourado com brilho. Áreas em ordem fixa; marca "⚠ mais fraca" só na área de rank mais baixo |
 | Mensagens do Sistema | caixa com borda azul neon, texto em MAIÚSCULAS entre colchetes |
 | Logo / ícone | portal em losango com a runa "S" (aprovado em 21/11/2026), arquivos em `design/` |
 
