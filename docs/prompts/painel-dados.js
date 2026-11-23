@@ -3,8 +3,8 @@
 // status: "feito" | "andamento" | "aberto"
 window.PAINEL = {
   atualizadoEm: "23/11/2026",
-  etapaAtual: "1.6",
-  proximoPasso: "Eclir: testar o checklist da 1.6 (CORPO e MENTE). Depois, etapa 1.7.",
+  etapaAtual: "1.8",
+  proximoPasso: "Uso real por 5 dias úteis. Anote o que incomoda e use o Prompt B (modelo da etapa 1.8).",
   versoes: [
     {
       id: "0", nome: "Etapa 0", subtitulo: "Preparação",
@@ -24,8 +24,8 @@ window.PAINEL = {
         { id: "1.4", nome: "Missões diárias", dias: 3, status: "feito", arquivo: "v1/1.4-missoes.md" },
         { id: "1.5", nome: "Registro do Ouro", dias: 2, status: "feito", arquivo: "v1/1.5-registro-ouro.md" },
         { id: "1.6", nome: "Treino + Check-in + Ritual", dias: 3, status: "feito", arquivo: "v1/1.6-treino-mente.md" },
-        { id: "1.7", nome: "Instalar e fechar a v1", dias: 2, status: "andamento", arquivo: "v1/1.7-publicar.md" },
-        { id: "1.8", nome: "Uso real e ajustes", dias: 5, status: "aberto", arquivo: "v1/B-modelo-conserto.md" }
+        { id: "1.7", nome: "Instalar e fechar a v1", dias: 2, status: "feito", arquivo: "v1/1.7-publicar.md" },
+        { id: "1.8", nome: "Uso real e ajustes", dias: 5, status: "andamento", arquivo: "v1/B-modelo-conserto.md" }
       ]
     },
     {
@@ -88,6 +88,7 @@ window.PAINEL = {
     }
   ],
   diario: [
+{ data: "23/11/2026", texto: "v1.0 publicada. Etapa 1.7 concluída: botão INSTALAR O SYSTEM e \"App instalado ✓\" em Ajustes (memória protegida pedida de novo após instalar), erros globais com [ERRO DO SISTEMA] e COPIAR DETALHES, revisão de telas de 320 px (grades sem estouro, botões de 48 px), cache do service worker conferido (com teste), versão 1.0.0, README público; 71 testes. Antes, correção da 1.6: a mensagem de penalidade mostra o total real (ex.: −20 HP · −10 CRISTAIS quando a Punição também não foi feita), com teste. Decisões: o erro mostra só mensagem, pilha, versão, tela e aparelho (sem dados pessoais); console.error de erros foi mantido só onde não há tela para avisar." },
 { data: "23/11/2026", texto: "Etapa 1.6 concluída: regras de MP, Fadiga e treino do dia; telas CORPO (Checagem de Segurança, treino, descanso, histórico) e MENTE (check-in, Ritual da Noite, CVV 188); MP no STATUS e em MISSÕES; 69 testes. Antes, ajustes da 1.5 (teto do diagnóstico 74, botões, mês, XP do Raid). Decisões: dias de treino vazios = seg/qua/sex; Fadiga só com 28 dias de histórico; o ritual só pergunta do sono se a missão 5 ainda está aberta." },
     { data: "23/11/2026", texto: "Etapa 1.5 concluída: regras puras do Ouro, tela OURO com registro rápido, lista do dia, editar/apagar e resumo do mês; missão 4 ligada aos registros; 56 testes. Antes, ajuste da 1.4: Raid de Foco não conclui a Missão Principal (+5 XP, só os 4 primeiros do dia). Decisão: o Ouro paga no máximo +10 XP +1 Cristal por dia; com impulso a missão 4 não conta mas o registro paga; sem estorno." },
     { data: "23/11/2026", texto: "Etapa 1.4 concluída: regras do dia e da Zona; avaliação dos dias ao abrir; tela MISSÕES com Raid de Foco, punição, level up e alerta das 21h; modo de teste com AVANÇAR 1 DIA e dados fictícios; 39 testes. Antes, ajustes da 1.3: cores dos ranks, marca MAIS FRACA e selo sem quebra de linha. Decisões: TREINEI dá 30 XP e 3 Cristais; o alerta das 21h vale também de 0h às 4h." },

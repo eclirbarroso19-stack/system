@@ -5,8 +5,8 @@
 > Status: ✅ concluído · 🔄 em andamento · ⬜ aberto
 
 **Atualizado em:** 23/11/2026
-**Etapa atual:** 1.6 (concluída; aguardando teste do Eclir)
-**Próximo passo:** Eclir testar o checklist da 1.6 (CORPO e MENTE). Depois, etapa 1.7.
+**Etapa atual:** 1.8 (uso real; v1.0 publicada)
+**Próximo passo:** Uso real por 5 dias úteis. Anote o que incomoda e use o Prompt B (modelo da etapa 1.8).
 
 ---
 
@@ -15,13 +15,13 @@
 | Versão | Etapas | Progresso |
 |---|---|---|
 | Etapa 0: Preparação | 4/4 | ██████████ 100% |
-| v1: Primeiro SYSTEM no celular | 6/8 | ███████░░░ 75% |
+| v1: Primeiro SYSTEM no celular | 7/8 | ████████░░ 90% |
 | v2: Diagnóstico + Dinheiro | 0/7 | ░░░░░░░░░░ 0% |
 | v3: Corpo + Gestão | 0/7 | ░░░░░░░░░░ 0% |
 | v4: Mente + Sombras + Relacionamentos | 0/6 | ░░░░░░░░░░ 0% |
 | v5: Profissional + Espiritualidade + Progressão | 0/7 | ░░░░░░░░░░ 0% |
 | v6: Portais Ocultos + Arte e Som | 0/6 | ░░░░░░░░░░ 0% |
-| **Geral** | **10/45** | **██░░░░░░░░ 22%** |
+| **Geral** | **11/45** | **██░░░░░░░░ 25%** |
 
 > O progresso é pesado pelos dias de cada etapa (🔄 conta metade). O painel visual (`painel.html`) calcula sozinho.
 
@@ -46,8 +46,8 @@
 | ✅ | 1.4 | Missões diárias | 3 | `v1/1.4-missoes.md` |
 | ✅ | 1.5 | Registro do Ouro | 2 | `v1/1.5-registro-ouro.md` |
 | ✅ | 1.6 | Treino + Check-in + Ritual | 3 | `v1/1.6-treino-mente.md` |
-| 🔄 | 1.7 | Instalar e fechar a v1 | 2 | `v1/1.7-publicar.md` |
-| ⬜ | 1.8 | Uso real e ajustes (5 dias) | 5 | `v1/B-modelo-conserto.md` |
+| ✅ | 1.7 | Instalar e fechar a v1 | 2 | `v1/1.7-publicar.md` |
+| 🔄 | 1.8 | Uso real e ajustes (5 dias) | 5 | `v1/B-modelo-conserto.md` |
 
 ### Sub-passos da etapa em andamento
 
@@ -69,6 +69,7 @@ Os nomes das etapas estão em `painel-dados.js` e os esboços em `v2/` … `v6/e
 
 | Data | O que aconteceu |
 |---|---|
+| 23/11/2026 | v1.0 publicada. Etapa 1.7 concluída: botão INSTALAR O SYSTEM e "App instalado ✓" em Ajustes (memória protegida pedida de novo após instalar), erros globais com [ERRO DO SISTEMA] e COPIAR DETALHES, revisão de telas de 320 px (grades sem estouro, botões de 48 px), cache do service worker conferido (com teste), versão 1.0.0, README público; 71 testes. Antes, correção da 1.6: a mensagem de penalidade mostra o total real (ex.: −20 HP · −10 CRISTAIS quando a Punição também não foi feita), com teste. Decisões: o erro mostra só mensagem, pilha, versão, tela e aparelho (sem dados pessoais); console.error de erros foi mantido só onde não há tela para avisar. |
 | 23/11/2026 | Etapa 1.6 concluída: treino.js (MP, Fadiga, treino do dia, PAR-Q), saude.js (dados de Corpo e Mente), tela CORPO (Checagem de Segurança, dias de treino, treino do dia, descanso, histórico, Fadiga), tela MENTE (check-in, Ritual da Noite, gráfico de 7 dias, CVV 188), MP no STATUS e em MISSÕES, aviso de treino faltado; 69 testes. Antes, ajustes da 1.5: XP do Raid no topo, botão do Ouro some com gasto, mês com maiúscula, botões lado a lado, teto do diagnóstico (nota máx. 74 no Despertar Rápido), edição não muda dia nem hora. Decisões: lista vazia de dias de treino = padrão seg/qua/sex; registrar treino num dia que já teve descanso não paga de novo; ritual da noite só pergunta do sono se a missão 5 ainda não foi marcada; Fadiga só calcula com um treino de 28 dias ou mais atrás. |
 | 23/11/2026 | Etapa 1.5 concluída: ouro.js (regras puras: resumo, missão 4, meses), tela OURO (+ GASTO / + ENTRADA, lista do dia, editar/apagar, resumo do mês, aviso de finanças) e missão 4 ligada aos registros; 56 testes. Antes, ajuste da 1.4: o Raid de Foco não conclui mais a Missão Principal (+5 XP por raid, só os 4 primeiros do dia, cancelar não dá XP, lista de raids no dia). Decisão: o Ouro paga no máximo +10 XP +1 Cristal por dia; com impulso a missão 4 não conta, mas o registro ainda paga; impulso depois da missão paga só desmarca, sem estorno. Raid além do 4º mostra mensagem sem XP. |
 | 22/11/2026 | Painel melhorado: etapas abrem formatadas no painel, com COPIAR, checklist marcável e TESTEI E ESTÁ OK (o progresso é marcado só pelo Claude Code). Novo `gerar-painel.mjs` gera o `etapas-dados.js`. |
