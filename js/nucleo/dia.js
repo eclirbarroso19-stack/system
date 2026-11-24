@@ -35,18 +35,37 @@ export function somarDias(dia, n) {
 }
 
 // ---- Relógio do app (com deslocamento só no modo de teste) ----
+// O deslocamento fica no localStorage (vale em todas as abas e depois de fechar o app).
+export const CHAVE_DESLOCAMENTO = "system-teste-deslocamento";
+const UM_DIA = 24 * 3600000;
+
 function modoTeste() {
   return typeof location !== "undefined" && new URLSearchParams(location.search).get("teste") === "1";
 }
 
 export function deslocamentoTeste() {
   if (!modoTeste()) return 0;
-  try { return Number(sessionStorage.getItem("deslocamentoTeste") || 0); } catch { return 0; }
+  try {
+    const n = Number(localStorage.getItem(CHAVE_DESLOCAMENTO) || 0);
+    return Number.isFinite(n) ? n : 0;
+  } catch { return 0; }
 }
 
 export function avancarDiaTeste() {
   if (!modoTeste()) return;
-  try { sessionStorage.setItem("deslocamentoTeste", String(deslocamentoTeste() + 24 * 3600000)); } catch { /* sem sessionStorage */ }
+  try { localStorage.setItem(CHAVE_DESLOCAMENTO, String(deslocamentoTeste() + UM_DIA)); } catch { /* sem localStorage */ }
+}
+
+export function zerarDeslocamentoTeste() {
+  if (!modoTeste()) return;
+  try { localStorage.removeItem(CHAVE_DESLOCAMENTO); } catch { /* sem localStorage */ }
+}
+
+// Texto do banner amarelo, ex.: "MODO DE TESTE · 01/12/2026" (data local simulada).
+export function textoFaixaTeste() {
+  const d = agora();
+  const p = (n) => String(n).padStart(2, "0");
+  return `MODO DE TESTE · ${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
 export function agora() {

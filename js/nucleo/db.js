@@ -1,6 +1,7 @@
 // Banco IndexedDB do SYSTEM. API em Promises. Sem DOM.
 // Modo de teste: URL com ?teste=1 usa o banco "system-teste" (não suja os dados reais).
 import { VERSAO_DADOS, NOME_BANCO } from "../config.js";
+import { zerarDeslocamentoTeste } from "./dia.js";
 
 // Todas as stores já na v1 (CLAUDE.md seção 7). chave: keyPath; auto: autoIncrement.
 export const STORES = [
@@ -107,6 +108,7 @@ export async function apagar(nome, chave) {
 }
 
 export async function limparTudo() {
+  zerarDeslocamentoTeste(); // só age no modo de teste
   const db = await abrir();
   const tx = db.transaction(NOMES_STORES, "readwrite");
   for (const n of NOMES_STORES) tx.objectStore(n).clear();

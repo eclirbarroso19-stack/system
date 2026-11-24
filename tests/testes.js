@@ -1,3 +1,4 @@
+import { testesDeslocamento } from "./testes-deslocamento.js";
 import { testesRaid } from "./testes-raid.js";
 import { testesTreino } from "./testes-treino.js";
 import { testesTeto } from "./testes-teto.js";
@@ -312,6 +313,7 @@ testes.push(
 );
 
 testes.push(...testesRaid);
+testes.push(...testesDeslocamento);
 testes.push(...testesOuro);
 testes.push(...testesTeto);
 testes.push(...testesTreino);

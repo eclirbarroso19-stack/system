@@ -4,6 +4,7 @@ import { aoAbrir } from "./abertura.js";
 import { emModoTeste } from "./nucleo/db.js";
 import { lerCacador } from "./nucleo/cacador.js";
 import { abrirDia } from "./nucleo/diario.js";
+import { textoFaixaTeste } from "./nucleo/dia.js";
 import { iniciarInstalacao } from "./instalacao.js";
 
 import { iniciarErros, mostrarErro } from "./erros.js";
@@ -53,8 +54,13 @@ if (emModoTeste()) {
   document.body.classList.add("modo-teste");
   const faixa = document.createElement("div");
   faixa.className = "faixa-teste";
-  faixa.textContent = "MODO DE TESTE";
+  faixa.textContent = textoFaixaTeste();
   document.body.prepend(faixa);
+  // A data simulada pode mudar (AVANÇAR 1 DIA, ou outra aba): reescreve o banner.
+  const atualizarFaixa = () => { faixa.textContent = textoFaixaTeste(); };
+  window.addEventListener("hashchange", atualizarFaixa);
+  document.addEventListener("visibilitychange", atualizarFaixa);
+  window.addEventListener("focus", atualizarFaixa);
 }
 
 window.addEventListener("hashchange", mostrar);
